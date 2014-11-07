@@ -23,6 +23,7 @@ public class MusicStoreDB {
 		try {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			Connection con = DriverManager.getConnection(connectURL,username,password);
+			System.out.println("Connected! :D");
 			con.close();
 		} catch (SQLException e) {
 			System.out.println("Message: " + e.getMessage());
