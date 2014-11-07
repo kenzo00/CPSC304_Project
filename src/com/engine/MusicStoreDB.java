@@ -14,7 +14,7 @@ public class MusicStoreDB {
 		Scanner scanner = new Scanner(System.in);
 		
 		// URL is in format "jdbc:mysql://<ip>:<port>/<databasename>"
-    	String connectURL = "jdbc:mysql://localhost:3306/test"; 
+    	String connectURL = "jdbc:mysql://localhost:3306/cpsc304"; 
     	System.out.println("Please Enter your username");
     	String username = scanner.nextLine();
     	System.out.println("Please Enter your passowrd");
