@@ -1,8 +1,10 @@
+CREATE DATABASE CPSC304;
+
 CREATE TABLE cpsc304.Item (
     upc INT,
     title VARCHAR(45),
     type VARCHAR(5),
-    category VARCHAR(20),
+    category VARCHAR(10),
     company VARCHAR(30),
     year INT,
     price DOUBLE,
