@@ -10,6 +10,7 @@ import java.util.Scanner;
 import org.junit.Test;
 
 import com.engine.DBQueries;
+import com.engine.Engine;
 import com.engine.Queries;
 
 public class QueryTest 
@@ -72,6 +73,36 @@ public class QueryTest
 			System.exit(-1);
 		}
 
+	}
+	
+	@Test
+	public void testEngine()
+	{
+		Engine engine = Engine.getInstance();
+		Queries queries = engine.getQueries();
+		
+		String table1 = "Customer";
+		String insertValues1 = "(1,'IAMHOKAGE','Naruto Uzumaki','123 Konoha',6041234567)";
+		
+		System.out.println( "Initial table" );
+		queries.displayTable( table1 );
+		
+		System.out.println( "Insert Naruto" );
+		queries.insertQuery( table1, insertValues1 );
+		queries.displayTable( table1 );
+		
+		System.out.println( "Insert Pikachu" );
+		String insertValues2 = "(2,'Pikapika?','Pikachu','4262 Pallet Town',682135752)";
+		queries.insertQuery ( table1, insertValues2 );
+		queries.displayTable( table1 );
+
+		System.out.println( "Delete Naruto" );
+		queries.deleteQuery( table1, "cid=1" );
+		queries.displayTable( table1 );
+		
+		System.out.println( "Delete Everything" );
+		queries.deleteQuery( table1 );
+		queries.displayTable( table1 );
 	}
 
 }

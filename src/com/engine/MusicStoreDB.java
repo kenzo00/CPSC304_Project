@@ -11,31 +11,7 @@ public class MusicStoreDB {
 	{
 		System.out.println("YAY FIRST CLASS :D");
 		
-		Scanner scanner = new Scanner(System.in);
-		
-		// URL is in format "jdbc:mysql://<ip>:<port>/<databasename>"
-    	String connectURL = "jdbc:mysql://localhost:3306/cpsc304"; 
-    	System.out.println("Please Enter your username");
-    	String username = scanner.nextLine();
-    	System.out.println("Please Enter your passowrd");
-    	String password = scanner.nextLine();
-    	
-		try 
-		{
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			Connection con = DriverManager.getConnection(connectURL,username,password);
-			System.out.println("Connected! :D");
-			
-			// Set Autocommit false
-			con.setAutoCommit( false );
-			
-			con.close();
-		} 
-		catch (SQLException e) 
-		{
-			System.out.println("Message: " + e.getMessage());
-			System.exit(-1);
-		}
+		Engine engine = Engine.getInstance();
 
 	}
 }
