@@ -10,6 +10,7 @@ public class Engine
 
 	private static Engine instance;
 	private static Queries queries;
+	private static Connection connection;
 
 	private Engine ()
 	{
@@ -42,13 +43,13 @@ public class Engine
 		try 
 		{
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			Connection con = DriverManager.getConnection(connectURL,username,password);
+			connection = DriverManager.getConnection(connectURL,username,password);
 			System.out.println("Connected! :D");
 
 			// Set Autocommit false
-			con.setAutoCommit( false );
+			connection.setAutoCommit( false );
 			
-			queries = new DBQueries( con );
+			queries = new DBQueries( connection );
 
 		} 
 		catch (SQLException e) 
