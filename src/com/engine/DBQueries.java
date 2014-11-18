@@ -93,7 +93,7 @@ public class DBQueries implements Queries
 		
 		// Build the String for the sql query
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( "DELETE FROM " ).append( table );
+		stringBuilder.append( "DELETE FROM cpsc304." ).append( table );
 		if ( condition.length() > 0 )
 		{
 			stringBuilder.append( " WHERE " ).append( condition );
@@ -142,7 +142,7 @@ public class DBQueries implements Queries
 	{
 		// Build the String for the sql query
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( "SELECT * FROM ").append( table );
+		stringBuilder.append( "SELECT * FROM cpsc304.").append( table );
 		
 		String query = stringBuilder.toString();
 		
