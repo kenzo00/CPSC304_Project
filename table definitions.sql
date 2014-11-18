@@ -17,7 +17,7 @@ CREATE TABLE cpsc304.Customer (
     password VARCHAR(30),
     name VARCHAR(30),
     address VARCHAR(45),
-    phone CHAR(12),
+    phone VARCHAR(12),
     PRIMARY KEY (cid)
 );
   

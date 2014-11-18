@@ -20,12 +20,19 @@ public class MusicStoreDB {
     	System.out.println("Please Enter your passowrd");
     	String password = scanner.nextLine();
     	
-		try {
+		try 
+		{
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 			Connection con = DriverManager.getConnection(connectURL,username,password);
 			System.out.println("Connected! :D");
+			
+			// Set Autocommit false
+			con.setAutoCommit( false );
+			
 			con.close();
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) 
+		{
 			System.out.println("Message: " + e.getMessage());
 			System.exit(-1);
 		}
