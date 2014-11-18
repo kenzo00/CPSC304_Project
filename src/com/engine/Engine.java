@@ -63,5 +63,10 @@ public class Engine
 	{
 		return queries;
 	}
+	
+	public Connection getConnection()
+	{
+		return connection;
+	}
 
 }
