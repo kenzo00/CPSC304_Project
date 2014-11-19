@@ -149,7 +149,7 @@ public class DBQueries implements Queries
 		ResultSet result;
 		try 
 		{
-			// Prepare and execute the delete statement
+			// Prepare and execute the select statement
 			PreparedStatement ps = connection.prepareStatement( query );
 			result = ps.executeQuery();
 			

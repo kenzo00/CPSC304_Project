@@ -39,7 +39,7 @@ public class Return
 			result.next();
 			date = result.getDate( 2 );
 			
-			isWithinDate = day15DaysAfter ( date.toLocalDate(), currentDate );
+			isWithinDate = !day15DaysAfter ( date.toLocalDate(), currentDate );
 		}
 		catch (SQLException e)
 		{
@@ -56,7 +56,7 @@ public class Return
 		
 		firstDate.plusDays( 15 );
 		
-		if ( firstDate.isAfter( secondDate ) )
+		if ( firstDate.isBefore( secondDate ) )
 		{
 			is15DaysAfter = true;
 		}
