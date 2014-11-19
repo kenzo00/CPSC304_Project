@@ -43,7 +43,7 @@ CREATE TABLE cpsc304.`Order` (
     receiptId INT,
     date DATE,
     cid INT NOT NULL,
-    `card#` INT NOT NULL,
+    `card#` VARCHAR(20) NOT NULL,
     expiryDate DATE NOT NULL,
     expectedDate DATE,
     deliveredDate DATE,
