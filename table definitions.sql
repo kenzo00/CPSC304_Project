@@ -3,9 +3,9 @@ CREATE DATABASE CPSC304;
 CREATE TABLE cpsc304.Item (
     upc INT,
     title VARCHAR(45),
-    type VARCHAR(5),
-    category VARCHAR(10),
-    company VARCHAR(30),
+    type VARCHAR(45),
+    category VARCHAR(45),
+    company VARCHAR(45),
     year INT,
     price DOUBLE,
     stock INT,
@@ -17,7 +17,7 @@ CREATE TABLE cpsc304.Customer (
     password VARCHAR(30),
     name VARCHAR(30),
     address VARCHAR(45),
-    phone VARCHAR(12),
+    phone VARCHAR(20),
     PRIMARY KEY (cid)
 );
   
@@ -32,7 +32,7 @@ CREATE TABLE cpsc304.LeadSinger (
 	
 CREATE TABLE cpsc304.HasSong (
     upc INT,
-    title VARCHAR(30),
+    title VARCHAR(45),
     PRIMARY KEY (upc),
     FOREIGN KEY (upc)
         REFERENCES cpsc304.Item (upc)
