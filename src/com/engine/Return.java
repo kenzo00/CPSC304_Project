@@ -14,12 +14,14 @@ public class Return
 {
 
 	private Connection connection;
-	
+
 	// Initialize the boolean values:
 	// success is true if there is a matching receiptId where the order was within 15 days
 	boolean success;
 	// isGoodUPC is true if there is a matching upc code in the receipt 
 	boolean isGoodUPC;
+	// isNewRefund is true if the refund does not already exist in the return table
+	boolean isNewRefund;
 
 	// Constructor
 	public Return() 
@@ -32,57 +34,57 @@ public class Return
 			// and increment stock with query; 
 			String query = "UPDATE CPSC304.PurchaseItem WHERE upc=" + upc + ",AND receiptId=" + receiptId; 
 			String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
-			
+
 			// update table that return is made
-			
+
 			try {
 				String query1 = "INSERT INTO CPSC304.Return WHERE receiptId=" + receiptId;
 				String query2 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
 				String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
-				
+
 				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
 				ps.executeUpdate();
 				ps.close();
-				
+
 				PreparedStatement ps0 = Engine.getInstance().getConnection().prepareStatement(query0);
 				ps0.executeUpdate();
 				ps0.close();
-				
+
 				PreparedStatement ps1 = Engine.getInstance().getConnection().prepareStatement(query1);
 				ps1.executeUpdate();
 				ps1.close();
-				
+
 				PreparedStatement ps2 = Engine.getInstance().getConnection().prepareStatement(query2);
 				ps2.executeUpdate();
 				ps2.close();
-				
+
 				PreparedStatement ps3 = Engine.getInstance().getConnection().prepareStatement(query3);
 				ps3.executeUpdate();
 				ps3.close();
-				
-				
-				
-				} 
-				catch (SQLException e) 
-				{
-					e.printStackTrace();
-					System.out.println("Failed to execute select from: " + upc + "\nError Message: " + e.getMessage());
-				}
-				
+
+
+
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+				System.out.println("Failed to execute select from: " + upc + "\nError Message: " + e.getMessage());
+			}
+
 			// display message "credit card refunded"
-			
+
 		}
 		// display a message that the item cannot be refunded
 		if (isValid(receiptId) == false) {
 			// display that the receipt is either past 15 days or does not match, and cancel refund
-			
+
 		}
 		// display a message that the item has already been refunded
 		if (newRefund(receiptId) == false) {
 			// display that the item has already been returned and cancel refund
-			
+
 		}
-		
+
 
 	}
 	// Checks if the purchase was made within 15 days if there is a matching receiptId
@@ -110,19 +112,21 @@ public class Return
 
 				isWithinDate = !day15DaysAfter ( date.toLocalDate(), currentDate );
 				if (isWithinDate == true) {
-					 success = true;
-					 return success;
+					success = true;
+					//return success;
 				}
-				
+
 			}
-				
+			else 
+				success = false;
+
 		}
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
 			System.out.println( e.getMessage() );
 		}
-		success = false;
+
 		return success;
 	}
 
@@ -141,10 +145,10 @@ public class Return
 
 		return is15DaysAfter;
 	}
-	
+
 	// Check if upc is the matching upc
 	public boolean isCorrectUpc( int receiptId, int upc) {
-		
+
 		String query = "SELECT upc FROM CPSC304.PurchaseItem WHERE receiptId=" + receiptId;
 
 		try 
@@ -153,7 +157,7 @@ public class Return
 			PreparedStatement ps = connection.prepareStatement( query );
 			ResultSet result = ps.executeQuery();
 
-			
+
 			boolean hasNext;
 			hasNext = result.next();
 			// checks if there are any matching receiptID's
@@ -163,26 +167,28 @@ public class Return
 				boolean isCorrect = (upcDB == upc);
 				if (isCorrect == true) {
 					isGoodUPC = true;
-					return isGoodUPC;
+					//return isGoodUPC;
 				}	
 			}
+			else 
+				isGoodUPC = false;
 		}
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
 			System.out.println( e.getMessage() );
 		}
-		isGoodUPC = false;
+
 		return isGoodUPC;
 	}
-	
+
 	// Returns true if this refund is new and not in the return table
-    // Returns false if the refund is already in the return table
+	// Returns false if the refund is already in the return table
 	public boolean newRefund( int receiptId ) {
 		String query = "SELECT * FROM CPSC304.Return WHERE receiptId=" + receiptId;
-		
+
 		List<Integer> returnIds = new ArrayList<Integer>();
-		
+
 		try 
 		{
 			// prepare and execute the SELECT
@@ -194,17 +200,25 @@ public class Return
 			{
 				returnIds.add( result.getInt(1) );
 			}
-			
+
 			// check to see if the item being returned has already been returned
-			if (returnIds.isEmpty()) 
-				return true;
-			
+			if (returnIds.isEmpty()) {
+				isNewRefund = true;
+				//return isNewRefund;
+			}
+			else {
+				isNewRefund = false;
+			}
+
+
+
 		}
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
 		} 
-			return false;
+		return isNewRefund;
 	}
-	
+
+
 }
