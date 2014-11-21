@@ -94,5 +94,50 @@ public class Item {
 			e.printStackTrace();
 		}
 	}
+
 	
+	// get the upc of an Item by providing category, title, or leading singer
+	public int getUpc(String offset, String c, String t, String s) {
+		String query;
+		int upc = 0;
+		if (offset == "c"){
+			query = "SELECT upc FROM cpsc304.`Item` WHERE category = '" + c +"'";
+		}
+		if (offset == "t"){
+			query = "SELECT upc FROM cpsc304.`Item` WHERE title = '" + t +"'";
+		}
+		if (offset == "s"){
+			query = "SELECT upc FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
+		}
+		else 
+			query = "SELECT A.upc FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.category = '" + c +"' AND"
+					+ "B.title = '" + t + "' AND"
+					+ "A.name = '" + s + "'";
+
+			try 
+			{
+				// Create sql query
+				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+
+				// Execute sql query
+				ResultSet result = ps.executeQuery();
+
+				if ( result.next() )
+				{
+					upc = result.getInt(1)+1;
+				}
+
+				ps.close();
+
+			}
+			catch ( SQLException e )
+			{
+				System.out.println( "Failed to execute Select Statement:\n" + query );
+				System.out.println(e.getMessage());
+			}
+			return upc;
+		
+	}
+
 }
