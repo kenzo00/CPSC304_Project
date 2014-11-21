@@ -10,6 +10,7 @@ public class CustomerPanel extends JPanel
 
 	public CustomerPanel()
 	{
-		
+		// TODO: add gui for registration
+		// TODO: add gui for purchasing items
 	}
 }
