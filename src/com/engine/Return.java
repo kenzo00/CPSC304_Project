@@ -14,12 +14,13 @@ public class Return
 {
 
 	private Connection connection;
-	boolean success; // 1
-	boolean nonMatchingReceipt; // 2
-	boolean goodUPC;
-	boolean badUPC;
-
 	
+	// Initialize the boolean values:
+	// success is true if there is a matching receiptId where the order was within 15 days
+	boolean success;
+	// isGoodUPC is true if there is a matching upc code in the receipt 
+	boolean isGoodUPC;
+
 	// Constructor
 	public Return() 
 	{
@@ -71,10 +72,12 @@ public class Return
 			// display message "credit card refunded"
 			
 		}
-		if (isValid(receiptId) == nonMatchingReceipt && newRefund(receiptId) == true) {
-			// display that the receipt does not match and cancel refund
+		// display a message that the item cannot be refunded
+		if (isValid(receiptId) == false) {
+			// display that the receipt is either past 15 days or does not match, and cancel refund
 			
 		}
+		// display a message that the item has already been refunded
 		if (newRefund(receiptId) == false) {
 			// display that the item has already been returned and cancel refund
 			
@@ -82,7 +85,7 @@ public class Return
 		
 
 	}
-	// Checks if the purchase was made within 15 days
+	// Checks if the purchase was made within 15 days if there is a matching receiptId
 	public boolean isValid( int receiptId) 
 	{
 		String query = "SELECT date FROM cpsc304.`Order` WHERE receiptId=" + receiptId;
@@ -159,8 +162,8 @@ public class Return
 
 				boolean isCorrect = (upcDB == upc);
 				if (isCorrect == true) {
-					goodUPC = true;
-					return goodUPC;
+					isGoodUPC = true;
+					return isGoodUPC;
 				}	
 			}
 		}
@@ -169,8 +172,8 @@ public class Return
 			System.out.println( "Failed to execute select statement:\n" + query );
 			System.out.println( e.getMessage() );
 		}
-		badUPC = false;
-		return badUPC;
+		isGoodUPC = false;
+		return isGoodUPC;
 	}
 	
 	// Returns true if this refund is new and not in the return table
@@ -203,9 +206,5 @@ public class Return
 		} 
 			return false;
 	}
-
-	// prompt message to say refunded to credit card
-	// check if item has already been returned
-
-
+	
 }
