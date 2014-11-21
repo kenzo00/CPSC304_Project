@@ -8,14 +8,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
+import java.sql.Connection;
 
 public class Return 
 {
 
 	private Connection connection;
-	int success = 1; // 1
-	int nonMatchingReceipt = 2; // 2
+	boolean success; // 1
+	boolean nonMatchingReceipt; // 2
 	boolean goodUPC;
 	boolean badUPC;
 
@@ -23,19 +23,51 @@ public class Return
 	// Constructor
 	public Return() 
 	{
-
+		connection = Engine.getInstance().getConnection();
 	}
 	public void refund(int receiptId, int upc) {
 
-		if (isValid(receiptId) == success && newRefund(receiptId) == true && isCorrectUpc(receiptId, upc) == goodUPC) {
+		if (isValid(receiptId) == true && newRefund(receiptId) == true && isCorrectUpc(receiptId, upc) == true) {
 			// and increment stock with query; 
-			String query = "UPDATE stored WHERE upc=" + upc + ",receiptId=" + receiptId; 
-			String query0 = "UPDATE stored WHERE receiptId=" + receiptId; 
+			String query = "UPDATE CPSC304.PurchaseItem WHERE upc=" + upc + ",AND receiptId=" + receiptId; 
+			String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
 			
 			// update table that return is made
-			String query1 = "INSERT INTO return WHERE receiptId=" + receiptId;
-			String query2 = "INSERT INTO returnItem WHERE upc=" + upc;
-			String query3 = "INSERT INTO returnItem WHERE upc=" + upc;
+			
+			try {
+				String query1 = "INSERT INTO CPSC304.Return WHERE receiptId=" + receiptId;
+				String query2 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
+				String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
+				
+				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
+				ps.executeUpdate();
+				ps.close();
+				
+				PreparedStatement ps0 = Engine.getInstance().getConnection().prepareStatement(query0);
+				ps0.executeUpdate();
+				ps0.close();
+				
+				PreparedStatement ps1 = Engine.getInstance().getConnection().prepareStatement(query1);
+				ps1.executeUpdate();
+				ps1.close();
+				
+				PreparedStatement ps2 = Engine.getInstance().getConnection().prepareStatement(query2);
+				ps2.executeUpdate();
+				ps2.close();
+				
+				PreparedStatement ps3 = Engine.getInstance().getConnection().prepareStatement(query3);
+				ps3.executeUpdate();
+				ps3.close();
+				
+				
+				
+				} 
+				catch (SQLException e) 
+				{
+					e.printStackTrace();
+					System.out.println("Failed to execute select from: " + upc + "\nError Message: " + e.getMessage());
+				}
+				
 			// display message "credit card refunded"
 			
 		}
@@ -51,9 +83,9 @@ public class Return
 
 	}
 	// Checks if the purchase was made within 15 days
-	public int isValid( int receiptId) 
+	public boolean isValid( int receiptId) 
 	{
-		String query = "SELECT date FROM Order WHERE receiptId=" + receiptId;
+		String query = "SELECT date FROM cpsc304.`Order` WHERE receiptId=" + receiptId;
 		boolean isWithinDate = false;
 
 		try 
@@ -71,11 +103,12 @@ public class Return
 			hasNext = result.next();
 			// checks if there are any matching receiptID's
 			if (hasNext == true) {
-				date = result.getDate( 2 );
+				date = result.getDate( 1 );
 
 				isWithinDate = !day15DaysAfter ( date.toLocalDate(), currentDate );
 				if (isWithinDate == true) {
-					return success;
+					 success = true;
+					 return success;
 				}
 				
 			}
@@ -84,8 +117,10 @@ public class Return
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
+			System.out.println( e.getMessage() );
 		}
-		return nonMatchingReceipt;
+		success = false;
+		return success;
 	}
 
 	// Returns true if secondDate is 15 days after firstDate
@@ -107,7 +142,7 @@ public class Return
 	// Check if upc is the matching upc
 	public boolean isCorrectUpc( int receiptId, int upc) {
 		
-		String query = "SELECT upc FROM PurchaseItem WHERE receiptId=" + receiptId;
+		String query = "SELECT upc FROM CPSC304.PurchaseItem WHERE receiptId=" + receiptId;
 
 		try 
 		{
@@ -120,7 +155,7 @@ public class Return
 			hasNext = result.next();
 			// checks if there are any matching receiptID's
 			if (hasNext == true) {
-				int upcDB = result.getInt(upc);
+				int upcDB = result.getInt(1);
 
 				boolean isCorrect = (upcDB == upc);
 				if (isCorrect == true) {
@@ -132,6 +167,7 @@ public class Return
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
+			System.out.println( e.getMessage() );
 		}
 		badUPC = false;
 		return badUPC;
@@ -140,7 +176,7 @@ public class Return
 	// Returns true if this refund is new and not in the return table
     // Returns false if the refund is already in the return table
 	public boolean newRefund( int receiptId ) {
-		String query = "SELECT * FROM Return WHERE receiptId=" + receiptId;
+		String query = "SELECT * FROM CPSC304.Return WHERE receiptId=" + receiptId;
 		
 		List<Integer> returnIds = new ArrayList<Integer>();
 		
