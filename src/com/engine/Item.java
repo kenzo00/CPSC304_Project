@@ -95,8 +95,9 @@ public class Item {
 		}
 	}
 
-	
+
 	// get the upc of an Item by providing category, title, or leading singer
+	// c = category, t = title, s = leadSinger
 	public int getUpc(String offset, String c, String t, String s) {
 		String query;
 		int upc = 0;
@@ -115,55 +116,55 @@ public class Item {
 					+ "B.title = '" + t + "' AND"
 					+ "A.name = '" + s + "'";
 
-			try 
-			{
-				// Create sql query
-				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
-
-				// Execute sql query
-				ResultSet result = ps.executeQuery();
-
-				if ( result.next() )
-				{
-					upc = result.getInt(1)+1;
-				}
-
-				ps.close();
-
-			}
-			catch ( SQLException e )
-			{
-				System.out.println( "Failed to execute Select Statement:\n" + query );
-				System.out.println(e.getMessage());
-			}
-			return upc;
-		
-	}
-	
-	// Check if there are enough stock for Order
-	public boolean isEnoughStock(int upc, int qty){
-		String query = "SELECT stock FROM cpsc304.Item WHERE upc =" + upc;
-		
-		int stock;
-		boolean isEnough = false;
-		
 		try 
 		{
 			// Create sql query
 			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
-			
+
 			// Execute sql query
 			ResultSet result = ps.executeQuery();
-			
+
+			if ( result.next() )
+			{
+				upc = result.getInt(1)+1;
+			}
+
+			ps.close();
+
+		}
+		catch ( SQLException e )
+		{
+			System.out.println( "Failed to execute Select Statement:\n" + query );
+			System.out.println(e.getMessage());
+		}
+		return upc;
+
+	}
+
+	// Check if there are enough stock for Order
+	public boolean isEnoughStock(int upc, int qty){
+		String query = "SELECT stock FROM cpsc304.Item WHERE upc =" + upc;
+
+		int stock;
+		boolean isEnough = false;
+
+		try 
+		{
+			// Create sql query
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+
+			// Execute sql query
+			ResultSet result = ps.executeQuery();
+
 			if ( result.next() )
 			{
 				stock = result.getInt(1);
 				if (qty >= stock)
 					isEnough = true;
 			}
-			
+
 			ps.close();
-			
+
 		}
 		catch ( SQLException e )
 		{
