@@ -78,6 +78,7 @@ public class Report
 		stringBuilder.append( "ROUND(i.price*p.quantity,2) AS `Total Price`, o.date AS `Date` " );
 		stringBuilder.append( "FROM Item i, `Order` o, PurchaseItem p WHERE o.date =" );
 		stringBuilder.append( day ).append( " AND p.receiptId = o.receiptId AND i.upc = p.upc" );
+		stringBuilder.append( "ORDER BY i.category " );
 		
 		String query = stringBuilder.toString();
 		

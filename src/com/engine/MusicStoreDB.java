@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.gui.MainInterface;
+
 public class MusicStoreDB {
 
 	public static void main ( String[] args )
@@ -12,6 +14,9 @@ public class MusicStoreDB {
 		System.out.println("YAY FIRST CLASS :D");
 		
 		Engine engine = Engine.getInstance();
+		
+		MainInterface gui = new MainInterface();
+		
 
 	}
 }
