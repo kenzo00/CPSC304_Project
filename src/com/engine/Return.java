@@ -38,39 +38,48 @@ public class Return
 			
 			
 			// and increment stock with query;  TODO Should be in Item table instead
-			String query = "UPDATE CPSC304.Item SET stock = 99 WHERE upc=" + upc; 
+			//String query = "UPDATE CPSC304.Item SET stock = 99 WHERE upc=" + upc; 
 			//String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
 
 			// update table that return is made
+			LocalDate ld = LocalDate.now();
+			//INSERT INTO cpsc304.`Return` VALUES (1016,"2014-11-25",66)
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("(").append(this.returnId).append(",\"").append(ld.toString()).append("\",");
+			stringBuilder.append(receiptId);
+			
+			String values = stringBuilder.append(")").toString();
+			
+			Engine.getInstance().getQueries().insertQuery("`Return`", values);
 
-			try {
-				LocalDate ld = LocalDate.now();
-				String query1 = "INSERT INTO CPSC304.Return VALUES(" + this.returnId + ", \"" + ld.toString() + "\", " + receiptId + ")";
-				String query2 = "INSERT INTO CPSC304.ReturnItem VALUES(" + this.returnId + ", " + upc + ", " + 9999 + ")";//quantity needed TODO
+			/*try {
+				String query1 = "INSERT INTO CPSC304.`Return` VALUES(" + this.returnId + ", \"" + ld.toString() + "\", " + receiptId + ")";
+				
+				//String query2 = "INSERT INTO CPSC304.ReturnItem VALUES(" + this.returnId + ", " + upc + ", " + 9999 + ")";//quantity needed TODO
 				//String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
 
-				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
+				/*PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
 				System.out.println(query);
 				ps.executeUpdate();
-				ps.close();
+				ps.close();*/
 
 				/*PreparedStatement ps0 = Engine.getInstance().getConnection().prepareStatement(query0);
 				ps0.executeUpdate();
 				ps0.close();*/
 
-				PreparedStatement ps1 = Engine.getInstance().getConnection().prepareStatement(query1);
+				/*PreparedStatement ps1 = Engine.getInstance().getConnection().prepareStatement(query1);
 				System.out.println(query1);
 				ps1.executeUpdate();
-				ps1.close();
+				ps1.close();*/
 
-				PreparedStatement ps2 = Engine.getInstance().getConnection().prepareStatement(query2);
+				/*PreparedStatement ps2 = Engine.getInstance().getConnection().prepareStatement(query2);
 				System.out.println(query2);
 				ps2.executeUpdate();
-				ps2.close();
+				ps2.close();*/
 
 				/*PreparedStatement ps3 = Engine.getInstance().getConnection().prepareStatement(query3);
 				ps3.executeUpdate();
-				ps3.close();*/
+				ps3.close();
 
 
 
@@ -79,7 +88,7 @@ public class Return
 			{
 				e.printStackTrace();
 				System.out.println("Failed to execute select from: " + upc + "\nError Message: " + e.getMessage());
-			}
+			}*/
 
 			// display message "credit card refunded"
 
