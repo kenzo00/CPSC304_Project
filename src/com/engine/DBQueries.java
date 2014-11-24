@@ -31,6 +31,7 @@ public class DBQueries implements Queries
 		stringBuilder.append( "INSERT INTO cpsc304." ).append( table ).append( " VALUES " ).append( values );
 
 		String query = stringBuilder.toString();
+		System.out.println(query); // for testing 
 
 		try 
 		{
