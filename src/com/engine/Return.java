@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.sql.Connection;
 
 public class Return 
@@ -15,6 +14,7 @@ public class Return
 
 	private Connection connection;
 
+	int returnId;
 	// Initialize the boolean values:
 	// success is true if there is a matching receiptId where the order was within 15 days
 	boolean success;
@@ -29,39 +29,48 @@ public class Return
 		connection = Engine.getInstance().getConnection();
 	}
 	public void refund(int receiptId, int upc) {
-
+		generateReturnId();
+		boolean a = isValid(receiptId);
+		boolean b = newRefund(receiptId);
+		boolean c = isCorrectUpc(receiptId, upc);
+		System.out.println(" booleans: \n" + a + b + c );
 		if (isValid(receiptId) == true && newRefund(receiptId) == true && isCorrectUpc(receiptId, upc) == true) {
-			// and increment stock with query; 
-			String query = "UPDATE CPSC304.PurchaseItem WHERE upc=" + upc + ",AND receiptId=" + receiptId; 
-			String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
+			
+			
+			// and increment stock with query;  TODO Should be in Item table instead
+			String query = "UPDATE CPSC304.Item SET stock = 99 WHERE upc=" + upc; 
+			//String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
 
 			// update table that return is made
 
 			try {
 				LocalDate ld = LocalDate.now();
-				String query1 = "INSERT INTO CPSC304.Return VALUES(" + ld.toString() + "," + receiptId + ")";
-				String query2 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
-				String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
+				String query1 = "INSERT INTO CPSC304.Return VALUES(" + this.returnId + ", \"" + ld.toString() + "\", " + receiptId + ")";
+				String query2 = "INSERT INTO CPSC304.ReturnItem VALUES(" + this.returnId + ", " + upc + ", " + 9999 + ")";//quantity needed TODO
+				//String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
 
 				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
+				System.out.println(query);
 				ps.executeUpdate();
 				ps.close();
 
-				PreparedStatement ps0 = Engine.getInstance().getConnection().prepareStatement(query0);
+				/*PreparedStatement ps0 = Engine.getInstance().getConnection().prepareStatement(query0);
 				ps0.executeUpdate();
-				ps0.close();
+				ps0.close();*/
 
 				PreparedStatement ps1 = Engine.getInstance().getConnection().prepareStatement(query1);
+				System.out.println(query1);
 				ps1.executeUpdate();
 				ps1.close();
 
 				PreparedStatement ps2 = Engine.getInstance().getConnection().prepareStatement(query2);
+				System.out.println(query2);
 				ps2.executeUpdate();
 				ps2.close();
 
-				PreparedStatement ps3 = Engine.getInstance().getConnection().prepareStatement(query3);
+				/*PreparedStatement ps3 = Engine.getInstance().getConnection().prepareStatement(query3);
 				ps3.executeUpdate();
-				ps3.close();
+				ps3.close();*/
 
 
 
@@ -220,6 +229,35 @@ public class Return
 		} 
 		return isNewRefund;
 	}
+	
+	// generate a returnId
+		// take the latest receiptId and increment by 1
+		private void generateReturnId() {
+			String query = "SELECT receiptId FROM cpsc304.`Order` ORDER BY receiptId DESC LIMIT 1;";
+
+			try 
+			{
+				// Create sql query
+				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+
+				// Execute sql query
+				ResultSet result = ps.executeQuery();
+
+				if ( result.next() )
+				{
+					this.returnId = result.getInt(1)+1;
+				}
+
+				ps.close();
+
+			}
+			catch ( SQLException e )
+			{
+				System.out.println( "Failed to execute Select Statement:\n" + query );
+				System.out.println(e.getMessage());
+			}
+			
+		}
 
 
 }
