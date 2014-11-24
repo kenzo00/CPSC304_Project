@@ -18,6 +18,10 @@ import javax.swing.JTabbedPane;
 
 public class MainInterface extends JFrame
 {
+	// Dimensions of the window
+	public static final int WIDTH = 1200;
+	public static final int HEIGHT = 1000;
+	
 	// The panel where everything is placed onto
 	private JPanel basePanel;
 	
@@ -37,47 +41,48 @@ public class MainInterface extends JFrame
 		basePanel = new JPanel();
 		titleLabel = new JLabel( "AMS Store Database System" );
 		titleLabel.setFont( new Font( "serif", Font.ITALIC + Font.BOLD, 30 ) );
-		tabs = new JTabbedPane();
 		
 		basePanel.setLayout(null);
 		
 		titleLabel.setBounds( 20, 0, 500, 50);
 		basePanel.add( titleLabel );
 		this.add( basePanel );
+
+		setSize( MainInterface.WIDTH, MainInterface.HEIGHT );
 		
+		// Initialize the tabs
 		initializeTabs();		
 		basePanel.add( tabs );
-		setSize( 1200, 1000 );
-		tabs.setBounds( 0, 50, this.getWidth() - 5, this.getHeight() - 83 );
+		tabs.setBounds( 0, 50, MainInterface.WIDTH - 5, MainInterface.HEIGHT - 80 );
 		
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		setResizable( false );
-	    
+		
 		setVisible( true );
 	}
 	
-	public void initializeTabs()
+	private void initializeTabs()
 	{
 		tabs = new JTabbedPane();
 		
 		customerPanel = new CustomerPanel();
 		JScrollPane customerScrollPane = new JScrollPane();
-	    customerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-	    customerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//	    customerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//	    customerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	    customerScrollPane.setViewportView( customerPanel );
 		tabs.addTab( "Customer", customerScrollPane );
 
 		clerkPanel = new ClerkPanel();
 		JScrollPane clerkScrollPane = new JScrollPane();
-		clerkScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		clerkScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		clerkScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//		clerkScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		clerkScrollPane.setViewportView( clerkPanel );
 		tabs.addTab( "Clerk", clerkScrollPane );
 		
 		managerPanel = new ManagerPanel();
 		JScrollPane managerScrollPane = new JScrollPane();
-		managerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		managerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		managerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//		managerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		managerScrollPane.setViewportView( managerPanel );
 		tabs.addTab( "Manager", managerScrollPane );
 		

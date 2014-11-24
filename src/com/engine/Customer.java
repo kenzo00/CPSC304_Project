@@ -2,7 +2,10 @@ package com.engine;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Customer 
 {
@@ -56,5 +59,35 @@ public class Customer
 		
 		// Execute the query
 		Engine.getInstance().getQueries().insertQuery( "Customer", values );
+	}
+	
+	public String getName( int cid )
+	{
+		String name = "";
+		
+		String query = "SELECT name FROM Customer WHERE cid=" + cid;
+		
+		try 
+		{
+			// Prepare and execute the select statement
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			ResultSet result = ps.executeQuery();
+			
+			while ( result.next() )
+			{
+				// There should only be one result because cid is the primary key of Customer
+				name = result.getString(1);
+			}
+						
+			ps.close();
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			System.out.println("Failed to execute select statement:\n" + query + "\nError Message: " + e.getMessage());
+		}
+		
+		return name;
 	}
 }
