@@ -38,7 +38,8 @@ public class Return
 			// update table that return is made
 
 			try {
-				String query1 = "INSERT INTO CPSC304.Return WHERE receiptId=" + receiptId;
+				LocalDate ld = LocalDate.now();
+				String query1 = "INSERT INTO CPSC304.Return VALUES(" + ld.toString() + "," + receiptId + ")";
 				String query2 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
 				String query3 = "INSERT INTO CPSC304.ReturnItem WHERE upc=" + upc;
 
@@ -110,7 +111,7 @@ public class Return
 			if (hasNext == true) {
 				date = result.getDate( 1 );
 
-				isWithinDate = !day15DaysAfter ( date.toLocalDate(), currentDate );
+				isWithinDate = within15Days ( currentDate, date.toLocalDate()  );
 				if (isWithinDate == true) {
 					success = true;
 					//return success;
@@ -130,15 +131,15 @@ public class Return
 		return success;
 	}
 
-	// Returns true if secondDate is 15 days after firstDate
+	// Returns true if it is during the period you can return
 	// Returns false otherwise
-	public boolean day15DaysAfter( LocalDate firstDate, LocalDate secondDate )
+	public boolean within15Days( LocalDate thisDate, LocalDate purchaseDate )
 	{
 		boolean is15DaysAfter = false;
 
-		firstDate.plusDays( 15 );
+		//purchaseDate.plusDays( 15 );
 
-		if ( firstDate.isBefore( secondDate ) )
+		if ( thisDate.isBefore( purchaseDate.plusDays( 15 ) ) )
 		{
 			is15DaysAfter = true;
 		}

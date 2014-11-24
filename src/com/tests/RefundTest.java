@@ -39,7 +39,7 @@ public class RefundTest
 		// some date tests
 		assertFalse(r.isValid(1) );
 		assertFalse(r.isValid(72) );
-		//assertTrue(r.isValid(54) );	// should return true, but is not. check code logic
+		assertTrue(r.isValid(77) );	// should return true, but is not. check code logic
 		
 		// tests to see if UPC match
 		assertTrue(r.isCorrectUpc(1, 1));
