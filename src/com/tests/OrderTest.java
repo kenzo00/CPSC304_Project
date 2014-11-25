@@ -2,6 +2,10 @@ package com.tests;
 
 import static org.junit.Assert.*;
 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +17,10 @@ import com.engine.Order;
 
 public class OrderTest 
 {
+	String fakeCard = "9888888888888889";
+	LocalDate currentDate2 = LocalDate.now();
+	Date fakeDate = Date.valueOf(currentDate2);
+	
 	@Before
 	public void setUp()
 	{
@@ -31,7 +39,11 @@ public class OrderTest
 	public void orderTest()
 	{
 		Order o = new Order(); 
-		o.onlineOrder(1, "BFX85QZH3CZ");
+		o.login(6969, "123456");
+		o.purchaseItem(1, 30);
+		o.purchaseItem(1, 21);
+		o.purchaseItem(2, 10);
+		o.checkOut(fakeCard, fakeDate);
 		
 		
 		

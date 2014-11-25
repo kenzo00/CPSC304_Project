@@ -26,6 +26,15 @@ public class CustomerTest
 	{
 		Engine.getInstance().getQueries().deleteQuery( "Customer" );
 	}
+	
+	@Test
+	public void isPassCorrectTest() 
+	{
+		Customer customer = new Customer();
+		
+		assertTrue( customer.isRegistered( 1 ) );
+		assertTrue( customer.isRegistered( 2 ) );
+	}
 
 	@Test
 	public void isRegisteredTest() 

@@ -14,13 +14,14 @@ public class Order {
 	int receiptId, cid;
 	Date date, expiryDate, expectedDate, deliveredDate;
 	String category, title, leadingSinger, cardNum;
+	ResultSet searchList;
 	Double maxOrder = 50.0; // maximum number of order that can be delivered in a day
 
 
 	Customer c = new Customer();
 	Item i = new Item();
 	Map<Integer, Integer> shopCart = new HashMap<Integer, Integer>();
-	
+
 	//Testing Variables 
 	String fakeCard = "8888888888888888";
 	String blankString = "";
@@ -35,47 +36,92 @@ public class Order {
 
 	// TODO need to talk to UI to get the info we need
 	// Assuming we have all the info we need atm for the purpose of testing
-	public void onlineOrder(int cid, String password) {
+	public void onlineOrder(int cid, String password) throws SQLException {
 		login(cid, password);
 		//UI - get Item name info TODO
-		purchaseItem(blankString, blankString, "Jay Chou", 5);
+		searchItem(blankString, blankString, "Jay Chou");
 
 		checkOut(fakeCard, fakeDate);
 
 	}
 
+	// Check if the login is valid
+	public boolean login(int cid, String password) {
+		boolean isSuccessful = c.isPassCorrect(cid, password);
+		if (isSuccessful) {
+			this.cid = cid;
+		}
+		return isSuccessful;
+
+	}
+
 	// Check if customer is registered, if not, register the customer
-	public void login(int cid, String password) {
+	public boolean registerCustomer(int cid, String password, String name, String address, String phone) {
 		boolean registered; 
 		registered = c.isRegistered(cid);
-		if (!registered){
-			//UI - get name,address,phone TODO
-			c.register(cid, password, "Bob", "LalaLand", "604-888-8888");
+		if (registered){
+			return false;
 		}
-		this.cid = cid;
+		else {
+			c.register(cid, password, name, address, phone);
+			this.cid = cid;
+			return true;
+		}
+
 	}
 
 	// Search & add item to the shopping cart
-	public void purchaseItem(String category, String title, String leadSinger, int qty) {
-		int upc = findUpc(category, title, leadSinger);
-			
-		boolean enoughStock = i.isEnoughStock(upc, qty);
-		// Check if there are enough quantity in store TODO
-		// Input: upc (get from above), qty
-		// Output: If enough stock, add (upc,qty) to the list, if not, ask user to accept the exisiting qty left in stock
-		if (enoughStock) {
+	public void searchItem(String category, String title, String leadSinger) throws SQLException {
+		int upc;
+		searchList = findItem(category, title, leadSinger);
+
+		while (searchList.next()){
+			//searchList.getst
+
+		}
+	}
+
+	// Check if the item is out of stock
+	public boolean isOutOfStock(int upc){
+		int newQuantity;
+		newQuantity = i.getStock(upc);
+		return (newQuantity == 0);
+
+	}
+
+	// Check if there are enough stock given the quantity
+	public int checkStock(int upc, int qty){
+		if (i.isEnoughStock(upc, qty)) {
+			return qty;
+		}
+		else 
+			return i.getStock(upc);
+	}
+
+	// Add the Item and the Quantity to the shopCart
+	public void purchaseItem(int upc, int qty){
+		boolean outOfStock = isOutOfStock(upc);
+		boolean enoughStock = (qty == checkStock(upc, qty));
+
+		if (outOfStock) {
+			return;
+		}
+
+		else if (enoughStock) {
 			shopCart.put(upc, qty);
+			i.updateStock(upc, qty);
+			return;
+
 		}
 		else {
 			int newQty = i.getStock(upc);
 			shopCart.put(upc, newQty);
+			i.updateStock(upc, newQty);
 		}
 		System.out.println(enoughStock);
 		System.out.println(upc);
 		System.out.println(shopCart.keySet());
 		System.out.println(shopCart.values());
-		
-
 	}
 
 
@@ -86,48 +132,48 @@ public class Order {
 
 		int outstandingNum = outstandingOrder(); 
 		calcDate(outstandingNum); 
-		
+
 		// Build the sql query
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( "(" ).append( this.receiptId ).append( ",\"" ).append( this.date ).append( "\"," );
 		stringBuilder.append( this.cid ).append( ",\"" ).append( this.cardNum ).append( "\",\"" ).append( this.expiryDate ).append( "\",\"" );
 		stringBuilder.append( this.expectedDate ).append( "\"," ).append( "NULL" );
-		
+
 		String values = stringBuilder.append( ")" ).toString();
 
 		// Execute the query
 		Engine.getInstance().getQueries().insertQuery( "`Order`", values );
-		
-		
+
+
 		Set<Map.Entry<Integer, Integer>> set = shopCart.entrySet();
 		for (Map.Entry<Integer, Integer> m : set) {
-			
+
 			//Insert this record to PurchaseItem table
 			// Build the sql query
 			StringBuilder stringBuilder2 = new StringBuilder();
 			stringBuilder2.append( "(" ).append( this.receiptId ).append( "," ).append( m.getKey() ).append( "," ).append( m.getValue() );
 			String values2 = stringBuilder2.append( ")" ).toString();
-			
+
 			// Execute the query
 			Engine.getInstance().getQueries().insertQuery( "PurchaseItem", values2 );
-			
 
-			
+
+
 		}
-		
-		
+
+
 		/*for (Integer upc: shopCart.keySet()){	
 			int qty = shopCart.get(upc);
-			
+
 			//Insert this record to PurchaseItem table
 			// Build the sql query
 			StringBuilder stringBuilder2 = new StringBuilder();
 			stringBuilder2.append( "(" ).append( this.receiptId ).append( "," ).append( upc ).append( "," ).append( qty );
 			String values2 = stringBuilder2.append( ")" ).toString();
-			
+
 			// Execute the query
 			Engine.getInstance().getQueries().insertQuery( "PurchaseItem", values2 );
-			
+
 
 			String upcKey = upc.toString();
 			String qtyValue = shopCart.get(upc).toString();  
@@ -135,34 +181,27 @@ public class Order {
 		} */
 
 	}
-	
+
 	// find the upc of an Item
-	private int findUpc(String category, String title, String leadSinger) {
-		int upc;
+	private ResultSet findItem(String category, String title, String leadSinger) {
+
 		// Call method in Item, should return the upc.
 		if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
-			upc = i.getUpc("c", category, title, leadSinger);
-			System.out.println("Checkc" + upc);
+			return i.getItems("c", category, title, leadSinger);
 		}
-			
+
 		else if (!title.isEmpty()&&(category.isEmpty()||leadSinger.isEmpty())){
-			upc = i.getUpc("t", category, title, leadSinger);
-			System.out.println("Checkt" + upc);
+			return i.getItems("t", category, title, leadSinger);
 		}
-			
+
 		else if (!leadSinger.isEmpty()&&(title.isEmpty()||category.isEmpty())){
-			upc = i.getUpc("s", category, title, leadSinger);
-			System.out.println("Checks" + upc);
+			return i.getItems("s", category, title, leadSinger);
 		}
-			
+
 		else{
-			upc = i.getUpc("all", category, title, leadSinger);
-			System.out.println("Checka" + upc);
+			return i.getItems("all", category, title, leadSinger);
+
 		}
-		
-		
-		return upc;
-		
 	}
 
 	// generate a receiptId
@@ -181,10 +220,10 @@ public class Order {
 			if ( result.next() )
 			{
 				this.receiptId = result.getInt(1)+1;
-				if (this.receiptId == 0) {
-					this.receiptId = 1;
-				}
+
 			}
+			else
+				this.receiptId = 1;
 
 			ps.close();
 
@@ -194,7 +233,7 @@ public class Order {
 			System.out.println( "Failed to execute Select Statement:\n" + query );
 			System.out.println(e.getMessage());
 		}
-		
+
 	}
 
 	// Calculate the expectedDate
@@ -202,9 +241,9 @@ public class Order {
 
 		LocalDate currentDate = LocalDate.now();
 		int numDays = (int) Math.ceil(num/maxOrder);
-		
+
 		LocalDate calculatedDate = currentDate.plusDays(numDays);
-		
+
 		this.date = Date.valueOf(currentDate);
 		this.expectedDate = Date.valueOf(calculatedDate);
 	}

@@ -6,6 +6,7 @@ import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,6 +35,13 @@ public class CustomerPanel extends JPanel
 	private JTextField name;
 	private JTextField address;
 	private JTextField phone;
+	
+	//Elements for PurchaseItem
+	private JTextField categoryField;
+	private JTextField titleField;
+	private JTextField singerField;
+	private JTextField upcField;
+	private JTextField qtyField;
 
 	// Panel for dispalying purchase GUI
 	private JPanel purchaseItemPanel;
@@ -99,6 +107,7 @@ public class CustomerPanel extends JPanel
 			{
 				Order order = new Order();
 				String userId = customerPanel.userId.getText();
+				int cid = (userId.equals("") || userId.matches("^\\s*$")) ? 0 :Integer.parseInt(userId);
 				String password = new String( customerPanel.password.getPassword() );
 				if ( userId.equals("") || password.equals("") )
 				{
@@ -109,7 +118,7 @@ public class CustomerPanel extends JPanel
 							JOptionPane.ERROR_MESSAGE);
 				}
 				// TODO: Check if password is correct in the if statement condition
-				else if ( true )
+				else if ( order.login(cid, password) )
 				{
 					// Password is correct. Continue to shopping page.
 					customerPanel.customerId = userId;
@@ -183,6 +192,7 @@ public class CustomerPanel extends JPanel
 			{
 				Order order = new Order();
 				String userId = customerPanel.newUserId.getText();
+				int cid = (userId.equals("") || userId.matches("^\\s*$")) ? 0 :Integer.parseInt(userId);
 				String password = new String( customerPanel.newPassword.getPassword() );
 				String name = customerPanel.name.getText();
 				String address = customerPanel.address.getText();
@@ -196,7 +206,7 @@ public class CustomerPanel extends JPanel
 							JOptionPane.ERROR_MESSAGE);
 				}
 				// TODO: Check if registration is successful in the if statement condition
-				else if ( true )
+				else if ( order.registerCustomer(cid, password, name, address, phone) )
 				{
 					// Registration is successful. Login the user and continue to shopping page.
 					customerName = name;
@@ -207,7 +217,7 @@ public class CustomerPanel extends JPanel
 				}
 				else
 				{
-					// Password is incorrect. Show error popup
+					// cid is taken. Show error popup
 					JOptionPane.showMessageDialog( customerPanel,
 							"Registration failed. Try a different userId",
 							"Registration error",
@@ -258,6 +268,14 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel = new JPanel();
 		purchaseItemPanel.setLayout( null );
 		purchaseItemPanel.setVisible( false );
+		final CustomerPanel customerPanel = this;
+		
+		// Constants used for spacing
+		int topItem = 206;
+		int labelSpacing = 50;
+		int textFieldSpacing = 75;
+		int buttonSpacing = 40;
+		int headerSpacing = 36;
 
 		// Heading Text
 		JLabel welcome = new JLabel( "Welcome to the AMS shopping system." );
@@ -266,7 +284,119 @@ public class CustomerPanel extends JPanel
 
 		JLabel welcome2 = new JLabel( "You are currently logged in as: User Id: " + customerId + ", Name: " + customerName );
 		welcome2.setFont( new Font( "serif", Font.PLAIN, 18 ) );
-		welcome2.setBounds( 45, 65 , 800, 24 );		
+		welcome2.setBounds( 45, 65 , 800, 24 );	
+		
+		// Search Bar
+		JLabel searchLabel = new JLabel ("Seach for your item...");
+		searchLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
+		searchLabel.setBounds( 150, topItem, 300, 40);
+		
+		//Category
+		JLabel categoryLabel = new JLabel("Category");
+		categoryLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		categoryLabel.setBounds(160, topItem + textFieldSpacing, 200, 40);
+		
+		categoryField = new JTextField();
+		categoryField.setBounds(160, topItem + textFieldSpacing + labelSpacing, 150, 18);
+		
+		//Title
+		JLabel titleLabel = new JLabel("Title");
+		titleLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		titleLabel.setBounds(160, topItem + textFieldSpacing*2, 200, 40);
+		
+		titleField = new JTextField();
+		titleField.setBounds(160, topItem + textFieldSpacing*2 + labelSpacing, 150, 18);
+		
+		//LeadSinger
+		JLabel singerLabel = new JLabel("Leading Singer");
+		singerLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		singerLabel.setBounds(160, topItem + textFieldSpacing*3, 200, 40);
+		
+		singerField = new JTextField();
+		singerField.setBounds(160, topItem + textFieldSpacing*3 + labelSpacing, 150, 18);
+		
+		//OR
+		JLabel orLabel = new JLabel("OR");
+		orLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
+		orLabel.setBounds(150, topItem + textFieldSpacing*4, 200, 40);
+		
+		//UPC
+		JLabel upcLabel = new JLabel("UPC");
+		upcLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		upcLabel.setBounds(160, topItem + 50 + textFieldSpacing*4, 200, 40);
+		
+		upcField = new JTextField();
+		upcField.setBounds(160, topItem + 50 + textFieldSpacing*4 + labelSpacing, 150, 18);
+		
+		//Quantity
+		JLabel qtyLabel = new JLabel("Quantity");
+		qtyLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		qtyLabel.setBounds(160, topItem + 50 + textFieldSpacing*5, 200, 40);
+		
+		qtyField = new JTextField();
+		qtyField.setBounds(160, topItem + 50 + textFieldSpacing*5 + labelSpacing, 150, 18);
+		
+		//Search Button
+		JButton searchButton = new JButton();
+		searchButton.addActionListener( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				Order order = new Order();
+				String category = customerPanel.categoryField.getText();
+				String title = customerPanel.titleField.getText();
+				String singer = customerPanel.singerField.getText();
+				String upcText = customerPanel.upcField.getText();
+				int upc = (upcText.equals("") || upcText.matches("^\\s*$")) ? 0 :Integer.parseInt(upcText);
+				String qtyText = customerPanel.qtyField.getText();
+				int qty = (qtyText.equals("") || qtyText.matches("^\\s*$")) ? 0 :Integer.parseInt(qtyText);
+				
+				if (category.isEmpty()&&title.isEmpty()&&singer.isEmpty()&&upcText.isEmpty()&&qtyText.isEmpty()) {
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Please fill in at least one of the fields",
+							"Search error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				
+				else if (upc != 0 && qty != 0) {
+					if (order.isOutOfStock(upc)) {
+						JOptionPane.showMessageDialog(customerPanel, 
+								"This item is currently out of stock",
+								"Out of Stock",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					int stock = order.checkStock(upc, qty);
+					if (qty > stock) {
+						int dialogResult = JOptionPane.showConfirmDialog(null, "Sorry, but there are only "+ stock +" left in stock. Do you want to purchase all of them?");
+						if (dialogResult == JOptionPane.YES_OPTION) {
+							order.purchaseItem(upc, stock);
+							JOptionPane.showMessageDialog(null, "Successfully added to cart");
+						}
+						else if (dialogResult == JOptionPane.NO_OPTION)
+							JOptionPane.showMessageDialog(null, "Is there anything else that you would like to buy?");
+					}
+					if (qty == stock) {
+						order.purchaseItem(upc, qty);
+						JOptionPane.showMessageDialog(null, "Successfully added to cart");
+					}
+					
+				} else // TODO, figure out how to display the list on GUI
+					try {
+						order.searchItem(category, title, singer);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
+			}
+
+		});
+		searchButton.setText( "Search" );
+		searchButton.setBounds( 360, topItem+textFieldSpacing*2, 85, 16 );
+		
+		
 
 		// TODO: Add inputs for searching for items
 		/* Example of text input
@@ -327,6 +457,22 @@ public class CustomerPanel extends JPanel
 		// Add header text
 		purchaseItemPanel.add( welcome );
 		purchaseItemPanel.add( welcome2 );
+		// Add search bar
+		purchaseItemPanel.add(searchLabel);
+		purchaseItemPanel.add(categoryLabel);
+		purchaseItemPanel.add(categoryField);
+		purchaseItemPanel.add(titleLabel);
+		purchaseItemPanel.add(titleField);
+		purchaseItemPanel.add(singerLabel);
+		purchaseItemPanel.add(singerField);
+		purchaseItemPanel.add(orLabel);
+		purchaseItemPanel.add(upcLabel);
+		purchaseItemPanel.add(upcField);
+		purchaseItemPanel.add(qtyLabel);
+		purchaseItemPanel.add(qtyField);
+		
+		// Add Search button
+		purchaseItemPanel.add(searchButton);
 		// Add logout button
 		purchaseItemPanel.add( logoutButton );
 

@@ -15,6 +15,35 @@ public class Customer
 		
 	}
 	
+	public boolean isPassCorrect (int cid, String password) {
+		String query = "SELECT * FROM cpsc304.Customer where cid=" + cid +" AND password=" +password;
+		
+		boolean isCorrect = false;
+		
+		try 
+		{
+			// Create sql query
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			
+			// Execute sql query
+			ResultSet result = ps.executeQuery();
+			
+			if ( result.next() )
+			{
+				isCorrect = true;
+			}
+			
+			ps.close();
+			
+		}
+		catch ( SQLException e )
+		{
+			System.out.println( "Failed to execute Select Statement:\n" + query );
+		}
+		
+		return isCorrect;
+	}
+	
 	// Checks if the customer is registered
 	// Returns true if the customer is registered
 	// Returns false if the customer is not registered or the sql query fails

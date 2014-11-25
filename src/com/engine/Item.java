@@ -87,31 +87,33 @@ public class Item {
 			String query = "UPDATE cpsc304.Item" + "SET price=" + price + "WHERE upc =" + upc;
 			ps = Engine.getInstance().getConnection().prepareStatement(query);
 			System.out.println(ps);
-			result = ps.executeQuery();
-			System.out.println(result);
-		} catch (SQLException e) {
+			ps.executeUpdate();
+			Engine.getInstance().getConnection().commit();
+			ps.close();
+		} 
+		catch (SQLException e) {
 			System.out.println("Failed to execute select from: " + upc + "\nError Message: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 
-	// get the upc of an Item by providing category, title, or leading singer
+	// get all the Items that matches the category, title, or leading singer
 	// c = category, t = title, s = leadSinger
-	public int getUpc(String offset, String c, String t, String s) {
+	public ResultSet getItems(String offset, String c, String t, String s) {
 		String query;
 		int upc = 0;
 		if (offset == "c"){
-			query = "SELECT upc FROM cpsc304.`Item` WHERE category = '" + c +"'";
+			query = "SELECT * FROM cpsc304.`Item` WHERE category = '" + c +"'";
 		}
 		if (offset == "t"){
-			query = "SELECT upc FROM cpsc304.`Item` WHERE title = '" + t +"'";
+			query = "SELECT * FROM cpsc304.`Item` WHERE title = '" + t +"'";
 		}
 		if (offset == "s"){
-			query = "SELECT upc FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
+			query = "SELECT * FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
 		}
 		else 
-			query = "SELECT A.upc FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
 					+ "WHERE B.category = '" + c +"' AND"
 					+ "B.title = '" + t + "' AND"
 					+ "A.name = '" + s + "'";
@@ -122,14 +124,9 @@ public class Item {
 			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
 
 			// Execute sql query
-			ResultSet result = ps.executeQuery();
-
-			if ( result.next() )
-			{
-				upc = result.getInt(1)+1;
-			}
-
+			ResultSet searchResult = ps.executeQuery();
 			ps.close();
+			return searchResult;
 
 		}
 		catch ( SQLException e )
@@ -137,7 +134,7 @@ public class Item {
 			System.out.println( "Failed to execute Select Statement:\n" + query );
 			System.out.println(e.getMessage());
 		}
-		return upc;
+		return null;
 
 	}
 
@@ -186,7 +183,7 @@ public class Item {
 			if ( result.next() )
 			{
 				stock = result.getInt(1);
-				if (qty >= stock)
+				if (stock >= qty)
 					isEnough = true;
 			}
 
@@ -199,6 +196,24 @@ public class Item {
 			System.out.println(e.getMessage());
 		}
 		return isEnough;
+	}
+
+	public void updateStock(int upc, int qty){
+		String query = "UPDATE cpsc304.Item SET stock = stock -" + qty + " WHERE upc =" + upc;
+
+		try 
+		{
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
+			ps.executeUpdate();
+			Engine.getInstance().getConnection().commit();
+			ps.close();
+		}
+		catch ( SQLException e )
+		{
+			System.out.println( "Failed to execute Update Statement:\n" + query );
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 }
