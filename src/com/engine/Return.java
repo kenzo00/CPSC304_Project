@@ -3,6 +3,7 @@ package com.engine;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class Return
 			
 			
 			// and increment stock with query;  TODO Should be in Item table instead
-			//String query = "UPDATE CPSC304.Item SET stock = 99 WHERE upc=" + upc; 
+			//String query = "UPDATE CPSC304.Item SET stock = stock + pItem.getQuantity(receiptId, upc)  WHERE upc=" + upc; 
 			//String query0 = "UPDATE CPSC304.PurchaseItem WHERE receiptId=" + receiptId; 
 
 			// update table that return is made
@@ -51,7 +52,27 @@ public class Return
 			String values = stringBuilder.append(")").toString();
 			
 			Engine.getInstance().getQueries().insertQuery("`Return`", values);
-
+			
+			// get puchaseItem method
+			PurchaseItem pItem = new PurchaseItem();
+			// Update ReturnItem table
+			StringBuilder stringBuilder1 = new StringBuilder();
+			stringBuilder1.append("(").append(this.returnId).append(",\"").append(upc).append("\",");
+			stringBuilder1.append(pItem.getQuantity(receiptId, upc));
+		
+			String values1 = stringBuilder1.append(")").toString();
+			
+			Engine.getInstance().getQueries().insertQuery("`ReturnItem`", values1);
+			
+			/*// Update Item table
+			StringBuilder stringBuilder2 = new StringBuilder();
+			stringBuilder2.append("UPDATE CPSC304.Item SET stock = stock +").append(pItem.getQuantity(receiptId, upc)).append("WHERE upc=").append(upc);
+		
+			String values2 = stringBuilder1.toString();
+			
+			Engine.getInstance().getQueries().insertQuery("`Item`", values2);
+			*/
+			
 			/*try {
 				String query1 = "INSERT INTO CPSC304.`Return` VALUES(" + this.returnId + ", \"" + ld.toString() + "\", " + receiptId + ")";
 				
@@ -240,9 +261,9 @@ public class Return
 	}
 	
 	// generate a returnId
-		// take the latest receiptId and increment by 1
+		// take the latest returnId and increment by 1
 		private void generateReturnId() {
-			String query = "SELECT receiptId FROM cpsc304.`Order` ORDER BY receiptId DESC LIMIT 1;";
+			String query = "SELECT retid FROM cpsc304.`Return` ORDER BY retid DESC LIMIT 1;";
 
 			try 
 			{
@@ -255,7 +276,12 @@ public class Return
 				if ( result.next() )
 				{
 					this.returnId = result.getInt(1)+1;
+					/*if (this.returnId == 0) {
+						this.returnId = 1;
+					}*/
 				}
+				else 
+					this.returnId = 1;
 
 				ps.close();
 
