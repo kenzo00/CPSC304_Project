@@ -181,6 +181,9 @@ public class Order {
 			if ( result.next() )
 			{
 				this.receiptId = result.getInt(1)+1;
+				if (this.receiptId == 0) {
+					this.receiptId = 1;
+				}
 			}
 
 			ps.close();
