@@ -64,6 +64,21 @@ public class Return
 			
 			Engine.getInstance().getQueries().insertQuery("`ReturnItem`", values1);
 			
+			// Update Item table
+			String query = "UPDATE CPSC304.Item SET stock = stock +" + pItem.getQuantity(receiptId, upc) + " WHERE upc=" + upc;
+
+			try 
+			{
+				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement(query);
+				ps.executeUpdate();
+				Engine.getInstance().getConnection().commit();
+				ps.close();
+			}
+			catch ( SQLException e )
+			{
+				System.out.println( "Failed to execute Update Statement:\n" + query );
+				System.out.println(e.getMessage());
+			}
 			/*// Update Item table
 			StringBuilder stringBuilder2 = new StringBuilder();
 			stringBuilder2.append("UPDATE CPSC304.Item SET stock = stock +").append(pItem.getQuantity(receiptId, upc)).append("WHERE upc=").append(upc);
@@ -72,6 +87,7 @@ public class Return
 			
 			Engine.getInstance().getQueries().insertQuery("`Item`", values2);
 			*/
+			
 			
 			/*try {
 				String query1 = "INSERT INTO CPSC304.`Return` VALUES(" + this.returnId + ", \"" + ld.toString() + "\", " + receiptId + ")";
