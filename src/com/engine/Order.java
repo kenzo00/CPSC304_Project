@@ -71,14 +71,24 @@ public class Order {
 	}
 
 	// Search & add item to the shopping cart
-	public void searchItem(String category, String title, String leadSinger) throws SQLException {
-		int upc;
-		searchList = findItem(category, title, leadSinger);
+	public TableInfo searchItem(String category, String title, String leadSinger) throws SQLException {
+		// Call method in Item, should return a TableInfo containing all the searched Item.
+				if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
+					return i.getItems("c", category, title, leadSinger);
+				}
 
-		while (searchList.next()){
-			//searchList.getst
+				else if (!title.isEmpty()&&(category.isEmpty()||leadSinger.isEmpty())){
+					return i.getItems("t", category, title, leadSinger);
+				}
 
-		}
+				else if (!leadSinger.isEmpty()&&(title.isEmpty()||category.isEmpty())){
+					return i.getItems("s", category, title, leadSinger);
+				}
+
+				else{
+					return i.getItems("all", category, title, leadSinger);
+
+				}
 	}
 
 	// Check if the item is out of stock
@@ -191,7 +201,7 @@ public class Order {
 	}
 
 	// find the upc of an Item
-	private ResultSet findItem(String category, String title, String leadSinger) {
+	/*private TableInfo findItem(String category, String title, String leadSinger) {
 
 		// Call method in Item, should return the upc.
 		if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
@@ -210,7 +220,7 @@ public class Order {
 			return i.getItems("all", category, title, leadSinger);
 
 		}
-	}
+	}*/
 
 	// generate a receiptId
 	// take the latest receiptId and increment by 1

@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 import com.engine.Customer;
 import com.engine.Order;
+import com.engine.TableInfo;
 
 public class CustomerPanel extends JPanel
 {
@@ -167,21 +168,21 @@ public class CustomerPanel extends JPanel
 		name2.setFont( new Font( "serif", Font.BOLD, 14 ) );
 		name2.setBounds( 750, topItem + 2*textFieldSpacing, 150, 19);
 
-		name = new JPasswordField();
+		name = new JTextField();
 		name.setBounds( 750, topItem + 2*textFieldSpacing + labelSpacing, 150, 16 );
 
 		JLabel address2 = new JLabel( "Address:" );
 		address2.setFont( new Font( "serif", Font.BOLD, 14 ) );
 		address2.setBounds( 750, topItem + 3*textFieldSpacing, 150, 19);
 
-		address = new JPasswordField();
+		address = new JTextField();
 		address.setBounds( 750, topItem + 3*textFieldSpacing + labelSpacing, 150, 16 );
 
 		JLabel phone2 = new JLabel( "Phone:" );
 		phone2.setFont( new Font( "serif", Font.BOLD, 14 ) );
 		phone2.setBounds( 750, topItem + 4*textFieldSpacing, 150, 19);
 
-		phone = new JPasswordField();
+		phone = new JTextField();
 		phone.setBounds( 750, topItem + 4*textFieldSpacing + labelSpacing, 150, 16 );
 
 		JButton registerButton = new JButton();
@@ -316,29 +317,29 @@ public class CustomerPanel extends JPanel
 		singerField.setBounds(160, topItem + textFieldSpacing*3 + labelSpacing, 150, 18);
 		
 		//OR
-		JLabel orLabel = new JLabel("OR");
-		orLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
-		orLabel.setBounds(150, topItem + textFieldSpacing*4, 200, 40);
+		JLabel purchaseLabel = new JLabel("Make Purchase");
+		purchaseLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
+		purchaseLabel.setBounds(150, topItem + textFieldSpacing*4+30, 400, 40);
 		
 		//UPC
 		JLabel upcLabel = new JLabel("UPC");
 		upcLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		upcLabel.setBounds(160, topItem + 50 + textFieldSpacing*4, 200, 40);
+		upcLabel.setBounds(160, topItem + 50 + textFieldSpacing*4+30, 200, 40);
 		
 		upcField = new JTextField();
-		upcField.setBounds(160, topItem + 50 + textFieldSpacing*4 + labelSpacing, 150, 18);
+		upcField.setBounds(160, topItem + 50 + textFieldSpacing*4+30 + labelSpacing, 150, 18);
 		
 		//Quantity
 		JLabel qtyLabel = new JLabel("Quantity");
 		qtyLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		qtyLabel.setBounds(160, topItem + 50 + textFieldSpacing*5, 200, 40);
+		qtyLabel.setBounds(160, topItem + 50 + textFieldSpacing*5+30, 200, 40);
 		
 		qtyField = new JTextField();
-		qtyField.setBounds(160, topItem + 50 + textFieldSpacing*5 + labelSpacing, 150, 18);
+		qtyField.setBounds(160, topItem + 50 + textFieldSpacing*5+30 + labelSpacing, 150, 18);
 		
-		//Search Button
-		JButton searchButton = new JButton();
-		searchButton.addActionListener( new ActionListener() {
+		//Purchase Button
+		JButton purchaseButton = new JButton();
+		purchaseButton.addActionListener( new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) 
@@ -393,8 +394,8 @@ public class CustomerPanel extends JPanel
 			}
 
 		});
-		searchButton.setText( "Search" );
-		searchButton.setBounds( 360, topItem+textFieldSpacing*2, 85, 16 );
+		purchaseButton.setText( "Search" );
+		purchaseButton.setBounds( 360, topItem+textFieldSpacing*2, 85, 16 );
 		
 		
 
@@ -450,7 +451,7 @@ public class CustomerPanel extends JPanel
 		});
 
 		logoutButton.setText( "Logout" );
-		logoutButton.setBounds( 1080, 15, 85, 16 );
+		logoutButton.setBounds( 1080, 450, 85, 16 );
 
 		// Add item purchasing page to CustomerPanel
 		this.add( purchaseItemPanel );
@@ -465,14 +466,14 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel.add(titleField);
 		purchaseItemPanel.add(singerLabel);
 		purchaseItemPanel.add(singerField);
-		purchaseItemPanel.add(orLabel);
+		purchaseItemPanel.add(purchaseLabel);
 		purchaseItemPanel.add(upcLabel);
 		purchaseItemPanel.add(upcField);
 		purchaseItemPanel.add(qtyLabel);
 		purchaseItemPanel.add(qtyField);
 		
-		// Add Search button
-		purchaseItemPanel.add(searchButton);
+		// Add Purchase button
+		purchaseItemPanel.add(purchaseButton);
 		// Add logout button
 		purchaseItemPanel.add( logoutButton );
 

@@ -2,7 +2,10 @@ package com.engine;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Item {
 
@@ -100,16 +103,16 @@ public class Item {
 
 	// get all the Items that matches the category, title, or leading singer
 	// c = category, t = title, s = leadSinger
-	public ResultSet getItems(String offset, String c, String t, String s) {
+	public TableInfo getItems(String offset, String c, String t, String s) {
 		String query;
 		int upc = 0;
 		if (offset == "c"){
 			query = "SELECT * FROM cpsc304.`Item` WHERE category = '" + c +"'";
 		}
-		if (offset == "t"){
+		else if (offset == "t"){
 			query = "SELECT * FROM cpsc304.`Item` WHERE title = '" + t +"'";
 		}
-		if (offset == "s"){
+		else if (offset == "s"){
 			query = "SELECT * FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
 		}
 		else 
@@ -118,24 +121,61 @@ public class Item {
 					+ "B.title = '" + t + "' AND"
 					+ "A.name = '" + s + "'";
 
+		TableInfo tableInfo = new TableInfo();
+
 		try 
 		{
 			// Create sql query
 			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			ResultSet result = ps.executeQuery();
 
-			// Execute sql query
-			ResultSet searchResult = ps.executeQuery();
+			// Get Number of columns
+			ResultSetMetaData resultMetadata = result.getMetaData();
+			int numCol = resultMetadata.getColumnCount();
+
+			// Put the Column names into an array
+			List<String> headerList = new ArrayList<String>();
+			for ( int i = 0; i < numCol; i++ )
+			{
+				headerList.add( resultMetadata.getColumnName( i+1 ) );
+			}
+			String[] headerArray = headerList.toArray( new String[ headerList.size() ] );
+
+			// Put the data into an array
+			List< List<String> > dataList = new ArrayList< List<String> >();
+			while ( result.next() )
+			{
+				List<String> dataRow = new ArrayList<String>();
+
+				for ( int i = 0; i < numCol; i++ )
+				{
+					dataRow.add( result.getString( i+1 ) );
+				}
+
+				dataList.add( dataRow );
+			}
+			String[][] dataArray = new String[ dataList.size() ][ headerList.size() ];
+			for ( int i = 0; i < dataList.size(); i++ )
+			{
+				List<String> dataRow = dataList.get( i );
+				for ( int j = 0; j < headerList.size(); j++ )
+				{
+					dataArray[i][j] = dataRow.get( j );
+				}
+			}
+
+			tableInfo = new TableInfo( headerArray, dataArray );
+
 			ps.close();
-			return searchResult;
 
-		}
-		catch ( SQLException e )
+		} 
+		catch (SQLException e) 
 		{
-			System.out.println( "Failed to execute Select Statement:\n" + query );
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+			System.out.println("Failed to execute select statement:\n" + query + "\nError Message: " + e.getMessage());
 		}
-		return null;
 
+		return tableInfo;
 	}
 
 	public int getStock(int upc) {
@@ -198,6 +238,7 @@ public class Item {
 		return isEnough;
 	}
 
+	// Update the ITEM table
 	public void updateStock(int upc, int qty){
 		String query = "UPDATE cpsc304.Item SET stock = stock -" + qty + " WHERE upc =" + upc;
 
