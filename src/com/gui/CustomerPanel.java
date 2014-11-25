@@ -103,7 +103,6 @@ public class CustomerPanel extends JPanel
 		JButton loginButton = new JButton();
 		loginButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				Order order = new Order();
@@ -188,7 +187,6 @@ public class CustomerPanel extends JPanel
 		JButton registerButton = new JButton();
 		registerButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				Order order = new Order();
@@ -341,7 +339,6 @@ public class CustomerPanel extends JPanel
 		JButton purchaseButton = new JButton();
 		purchaseButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				Order order = new Order();
@@ -436,7 +433,6 @@ public class CustomerPanel extends JPanel
 		JButton logoutButton = new JButton();
 		logoutButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				// Logout and return to login page.
