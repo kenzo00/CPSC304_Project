@@ -177,7 +177,8 @@ public class Item {
 
 		return tableInfo;
 	}
-
+	
+	//Get the stock of an Item
 	public int getStock(int upc) {
 		String query = "SELECT stock FROM cpsc304.Item WHERE upc =" + upc;
 
@@ -239,8 +240,9 @@ public class Item {
 	}
 
 	// Update the ITEM table
-	public void updateStock(int upc, int qty){
-		String query = "UPDATE cpsc304.Item SET stock = stock -" + qty + " WHERE upc =" + upc;
+	// Operator can be either +/-
+	public void updateStock(int upc, int qty, String operator){
+		String query = "UPDATE cpsc304.Item SET stock = stock"+operator +"" + qty + " WHERE upc =" + upc;
 
 		try 
 		{

@@ -123,7 +123,7 @@ public class Order {
 			}
 			else
 				shopCart.put(upc, qty);
-			i.updateStock(upc, qty);
+			i.updateStock(upc, qty, "-");
 			return;
 
 		}
@@ -134,7 +134,7 @@ public class Order {
 			}
 			else
 				shopCart.put(upc, newQty);
-			i.updateStock(upc, newQty);
+			i.updateStock(upc, newQty, "-");
 		}
 		System.out.println(enoughStock);
 		System.out.println(upc);

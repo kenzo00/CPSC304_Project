@@ -36,7 +36,7 @@ public class CustomerPanel extends JPanel
 	private JTextField name;
 	private JTextField address;
 	private JTextField phone;
-	
+
 	//Elements for PurchaseItem
 	private JTextField categoryField;
 	private JTextField titleField;
@@ -270,7 +270,7 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel.setLayout( null );
 		purchaseItemPanel.setVisible( false );
 		final CustomerPanel customerPanel = this;
-		
+
 		// Constants used for spacing
 		int topItem = 206;
 		int labelSpacing = 50;
@@ -286,57 +286,83 @@ public class CustomerPanel extends JPanel
 		JLabel welcome2 = new JLabel( "You are currently logged in as: User Id: " + customerId + ", Name: " + customerName );
 		welcome2.setFont( new Font( "serif", Font.PLAIN, 18 ) );
 		welcome2.setBounds( 45, 65 , 800, 24 );	
-		
+
 		// Search Bar
 		JLabel searchLabel = new JLabel ("Seach for your item...");
 		searchLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
 		searchLabel.setBounds( 150, topItem, 300, 40);
-		
+
 		//Category
 		JLabel categoryLabel = new JLabel("Category");
 		categoryLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		categoryLabel.setBounds(160, topItem + textFieldSpacing, 200, 40);
-		
+
 		categoryField = new JTextField();
 		categoryField.setBounds(160, topItem + textFieldSpacing + labelSpacing, 150, 18);
-		
+
 		//Title
 		JLabel titleLabel = new JLabel("Title");
 		titleLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		titleLabel.setBounds(160, topItem + textFieldSpacing*2, 200, 40);
-		
+
 		titleField = new JTextField();
 		titleField.setBounds(160, topItem + textFieldSpacing*2 + labelSpacing, 150, 18);
-		
+
 		//LeadSinger
 		JLabel singerLabel = new JLabel("Leading Singer");
 		singerLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		singerLabel.setBounds(160, topItem + textFieldSpacing*3, 200, 40);
-		
+
 		singerField = new JTextField();
 		singerField.setBounds(160, topItem + textFieldSpacing*3 + labelSpacing, 150, 18);
-		
+
 		//OR
 		JLabel purchaseLabel = new JLabel("Make Purchase");
 		purchaseLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
 		purchaseLabel.setBounds(150, topItem + textFieldSpacing*4+30, 400, 40);
-		
+
 		//UPC
 		JLabel upcLabel = new JLabel("UPC");
 		upcLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		upcLabel.setBounds(160, topItem + 50 + textFieldSpacing*4+30, 200, 40);
-		
+
 		upcField = new JTextField();
 		upcField.setBounds(160, topItem + 50 + textFieldSpacing*4+30 + labelSpacing, 150, 18);
-		
+
 		//Quantity
 		JLabel qtyLabel = new JLabel("Quantity");
 		qtyLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		qtyLabel.setBounds(160, topItem + 50 + textFieldSpacing*5+30, 200, 40);
-		
+
 		qtyField = new JTextField();
 		qtyField.setBounds(160, topItem + 50 + textFieldSpacing*5+30 + labelSpacing, 150, 18);
-		
+
+
+
+		//Search Button
+		JButton searchButton = new JButton();
+		searchButton.addActionListener( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Order order = new Order();
+
+				String category = customerPanel.categoryField.getText();
+				String title = customerPanel.titleField.getText();
+				String singer = customerPanel.singerField.getText();
+
+				if (category.isEmpty()&&title.isEmpty()&&singer.isEmpty()){
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Please fill in at least one of the fields",
+							"Search error",
+							JOptionPane.ERROR_MESSAGE);
+
+				}
+			}
+		});
+
+
+
 		//Purchase Button
 		JButton purchaseButton = new JButton();
 		purchaseButton.addActionListener( new ActionListener() {
@@ -345,21 +371,19 @@ public class CustomerPanel extends JPanel
 			public void actionPerformed(ActionEvent e) 
 			{
 				Order order = new Order();
-				String category = customerPanel.categoryField.getText();
-				String title = customerPanel.titleField.getText();
-				String singer = customerPanel.singerField.getText();
+
 				String upcText = customerPanel.upcField.getText();
 				int upc = (upcText.equals("") || upcText.matches("^\\s*$")) ? 0 :Integer.parseInt(upcText);
 				String qtyText = customerPanel.qtyField.getText();
 				int qty = (qtyText.equals("") || qtyText.matches("^\\s*$")) ? 0 :Integer.parseInt(qtyText);
-				
-				if (category.isEmpty()&&title.isEmpty()&&singer.isEmpty()&&upcText.isEmpty()&&qtyText.isEmpty()) {
+
+				if (upcText.isEmpty()&&qtyText.isEmpty()) {
 					JOptionPane.showMessageDialog(customerPanel, 
-							"Please fill in at least one of the fields",
+							"Please fill the UPC and Quantity you want to purchase",
 							"Search error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-				
+
 				else if (upc != 0 && qty != 0) {
 					if (order.isOutOfStock(upc)) {
 						JOptionPane.showMessageDialog(customerPanel, 
@@ -382,22 +406,17 @@ public class CustomerPanel extends JPanel
 						order.purchaseItem(upc, qty);
 						JOptionPane.showMessageDialog(null, "Successfully added to cart");
 					}
+
+				} //else // TODO, figure out how to display the list on GUI
 					
-				} else // TODO, figure out how to display the list on GUI
-					try {
-						order.searchItem(category, title, singer);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				
+
 			}
 
 		});
-		purchaseButton.setText( "Search" );
-		purchaseButton.setBounds( 360, topItem+textFieldSpacing*2, 85, 16 );
-		
-		
+		purchaseButton.setText( "Purhcase" );
+		purchaseButton.setBounds( 360, topItem+textFieldSpacing*6, 85, 30 );
+
+
 
 		// TODO: Add inputs for searching for items
 		/* Example of text input
@@ -427,7 +446,7 @@ public class CustomerPanel extends JPanel
 			topSalesTablePanel.setBounds( 0, 0, 500, 16*data.length + 18 );
 			topSalesTablePanel.add( topSalesTable.getTableHeader(), BorderLayout.NORTH );
 			topSalesTablePanel.add( topSalesTable, BorderLayout.CENTER );
-			
+
 
 		 */
 		// TODO: maybe add remove from shopping cart? 
@@ -451,7 +470,7 @@ public class CustomerPanel extends JPanel
 		});
 
 		logoutButton.setText( "Logout" );
-		logoutButton.setBounds( 1080, 450, 85, 16 );
+		logoutButton.setBounds( 1080, 15, 85, 16 );
 
 		// Add item purchasing page to CustomerPanel
 		this.add( purchaseItemPanel );
@@ -471,7 +490,7 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel.add(upcField);
 		purchaseItemPanel.add(qtyLabel);
 		purchaseItemPanel.add(qtyField);
-		
+
 		// Add Purchase button
 		purchaseItemPanel.add(purchaseButton);
 		// Add logout button
