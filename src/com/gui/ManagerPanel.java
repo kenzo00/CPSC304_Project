@@ -129,11 +129,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < yearArray.length; i++)
 		{
-			topSalesYearDropdown.addItem( (int)yearArray[i] );
+			topSalesYearDropdown.addItem( (Integer)yearArray[i] );
 		}
 		topSalesYearDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				topSalesYear = (int)topSalesYearDropdown.getSelectedItem();
+				topSalesYear = (Integer)topSalesYearDropdown.getSelectedItem();
 			}
 		});
 		topSalesYear = currentYear;
@@ -156,11 +156,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < monthArray.length; i++)
 		{
-			topSalesMonthDropdown.addItem( (int)monthArray[i] );
+			topSalesMonthDropdown.addItem( (Integer)monthArray[i] );
 		}
 		topSalesMonthDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				topSalesMonth = (int)topSalesMonthDropdown.getSelectedItem();
+				topSalesMonth = (Integer)topSalesMonthDropdown.getSelectedItem();
 			}
 		});
 		topSalesMonth = 1;
@@ -183,11 +183,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < dayArray.length; i++)
 		{
-			topSalesDayDropdown.addItem( (int)dayArray[i] );
+			topSalesDayDropdown.addItem( (Integer)dayArray[i] );
 		}
 		topSalesDayDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				topSalesDay = (int)topSalesDayDropdown.getSelectedItem();
+				topSalesDay = (Integer)topSalesDayDropdown.getSelectedItem();
 			}
 		});
 		topSalesDay = 1;
@@ -208,7 +208,7 @@ public class ManagerPanel extends JPanel
 		}
 		topSalesNumberDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				topSalesNumberElements = (int)topSalesNumberDropdown.getSelectedItem();
+				topSalesNumberElements = (Integer)topSalesNumberDropdown.getSelectedItem();
 			}
 		});
 		topSalesNumberElements = 1;
@@ -225,7 +225,6 @@ public class ManagerPanel extends JPanel
 		JButton generateTopSalesButton = new JButton();
 		generateTopSalesButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				String year = String.valueOf( topSalesYear );
@@ -293,11 +292,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < yearArray.length; i++)
 		{
-			dailyReportYearDropdown.addItem( (int)yearArray[i] );
+			dailyReportYearDropdown.addItem( (Integer)yearArray[i] );
 		}
 		dailyReportYearDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dailyReportYear = (int)dailyReportYearDropdown.getSelectedItem();
+				dailyReportYear = (Integer)dailyReportYearDropdown.getSelectedItem();
 			}
 		});
 		dailyReportYear = currentYear;
@@ -320,11 +319,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < monthArray.length; i++)
 		{
-			dailyReportMonthDropdown.addItem( (int)monthArray[i] );
+			dailyReportMonthDropdown.addItem( (Integer)monthArray[i] );
 		}
 		dailyReportMonthDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dailyReportMonth = (int)dailyReportMonthDropdown.getSelectedItem();
+				dailyReportMonth = (Integer)dailyReportMonthDropdown.getSelectedItem();
 			}
 		});
 		dailyReportMonth = 1;
@@ -347,11 +346,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < dayArray.length; i++)
 		{
-			dailyReportDayDropdown.addItem( (int)dayArray[i] );
+			dailyReportDayDropdown.addItem( (Integer)dayArray[i] );
 		}
 		dailyReportDayDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dailyReportDay = (int)dailyReportDayDropdown.getSelectedItem();
+				dailyReportDay = (Integer)dailyReportDayDropdown.getSelectedItem();
 			}
 		});
 		dailyReportDay = 1;
@@ -373,7 +372,6 @@ public class ManagerPanel extends JPanel
 		JButton generateDailyReportButton = new JButton();
 		generateDailyReportButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				String year = String.valueOf( dailyReportYear );
@@ -467,11 +465,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < yearArray.length; i++)
 		{
-			deliverYearDropdown.addItem( (int)yearArray[i] );
+			deliverYearDropdown.addItem( (Integer)yearArray[i] );
 		}
 		deliverYearDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deliveryYear = (int)deliverYearDropdown.getSelectedItem();
+				deliveryYear = (Integer)deliverYearDropdown.getSelectedItem();
 			}
 		});
 		deliveryYear = currentYear;
@@ -494,11 +492,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < monthArray.length; i++)
 		{
-			deliveryMonthDropdown.addItem( (int)monthArray[i] );
+			deliveryMonthDropdown.addItem( (Integer)monthArray[i] );
 		}
 		deliveryMonthDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deliveryMonth = (int)deliveryMonthDropdown.getSelectedItem();
+				deliveryMonth = (Integer)deliveryMonthDropdown.getSelectedItem();
 			}
 		});
 		deliveryMonth = 1;
@@ -521,11 +519,11 @@ public class ManagerPanel extends JPanel
 
 		for (int i = 0; i < dayArray.length; i++)
 		{
-			deliveryDayDropdown.addItem( (int)dayArray[i] );
+			deliveryDayDropdown.addItem( (Integer)dayArray[i] );
 		}
 		deliveryDayDropdown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				deliveryDay = (int)deliveryDayDropdown.getSelectedItem();
+				deliveryDay = (Integer)deliveryDayDropdown.getSelectedItem();
 			}
 		});
 		deliveryDay = 1;
@@ -547,7 +545,6 @@ public class ManagerPanel extends JPanel
 		JButton setDeliveryDateButton = new JButton();
 		setDeliveryDateButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				String year = String.valueOf( deliveryYear );
@@ -629,7 +626,6 @@ public class ManagerPanel extends JPanel
 		JButton updateItemButton = new JButton();
 		updateItemButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				String upcString = itemUpcInput.getText();
