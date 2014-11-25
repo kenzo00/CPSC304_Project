@@ -258,5 +258,38 @@ public class Item {
 		}
 
 	}
+	
+	// Generate a new upc for a new item entry
+	// The new upc is the previous largest upc + 1
+	// If failed, returns 0
+	public int generateNewUpc()
+	{
+		int upc = 0;
+		
+		String query = "SELECT MAX(upc) FROM Item";
+		
+		try 
+		{
+			// Prepare and execute the select statement
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			ResultSet result = ps.executeQuery();
+			
+			while ( result.next() )
+			{
+				// There should only be one MAX upc
+				upc = result.getInt(1) + 1;
+			}
+						
+			ps.close();
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			System.out.println("Failed to execute select statement:\n" + query + "\nError Message: " + e.getMessage());
+		}
+		
+		return upc;
+	}
 
 }
