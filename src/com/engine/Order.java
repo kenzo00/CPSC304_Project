@@ -36,7 +36,7 @@ public class Order {
 
 	// TODO need to talk to UI to get the info we need
 	// Assuming we have all the info we need atm for the purpose of testing
-	public void onlineOrder(int cid, String password) throws SQLException {
+	public void onlineOrder(int cid, String password){
 		login(cid, password);
 		//UI - get Item name info TODO
 		searchItem(blankString, blankString, "Jay Chou");
@@ -71,7 +71,7 @@ public class Order {
 	}
 
 	// Search & add item to the shopping cart
-	public TableInfo searchItem(String category, String title, String leadSinger) throws SQLException {
+	public TableInfo searchItem(String category, String title, String leadSinger){
 		// Call method in Item, should return a TableInfo containing all the searched Item.
 				if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
 					return i.getItems("c", category, title, leadSinger);
