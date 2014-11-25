@@ -276,7 +276,7 @@ public class Item {
 			
 			while ( result.next() )
 			{
-				// There should only be one result because cid is the primary key of Customer
+				// There should only be one MAX upc
 				upc = result.getInt(1) + 1;
 			}
 						
