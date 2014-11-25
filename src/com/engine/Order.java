@@ -109,6 +109,7 @@ public class Order {
 	}
 
 	// Add the Item and the Quantity to the shopCart
+	// Assuming the upc is valid
 	public void purchaseItem(int upc, int qty){
 		boolean outOfStock = isOutOfStock(upc);
 		boolean enoughStock = (qty == checkStock(upc, qty));
