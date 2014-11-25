@@ -108,14 +108,22 @@ public class Order {
 		}
 
 		else if (enoughStock) {
-			shopCart.put(upc, qty);
+			if(shopCart.containsKey(upc)) {
+				shopCart.put(upc, shopCart.get(upc)+qty);
+			}
+			else
+				shopCart.put(upc, qty);
 			i.updateStock(upc, qty);
 			return;
 
 		}
 		else {
 			int newQty = i.getStock(upc);
-			shopCart.put(upc, newQty);
+			if(shopCart.containsKey(upc)) {
+				shopCart.put(upc, shopCart.get(upc)+newQty);
+			}
+			else
+				shopCart.put(upc, newQty);
 			i.updateStock(upc, newQty);
 		}
 		System.out.println(enoughStock);
