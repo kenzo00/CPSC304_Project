@@ -341,7 +341,6 @@ public class CustomerPanel extends JPanel
 		JButton searchButton = new JButton();
 		searchButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Order order = new Order();
 

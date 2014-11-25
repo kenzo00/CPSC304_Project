@@ -34,7 +34,7 @@ public class Item {
 		return stock;
 	}
 
-	public Boolean itemExist(int upc) {
+	public boolean itemExist(int upc) {
 		boolean returnValue = false;
 
 		try {
