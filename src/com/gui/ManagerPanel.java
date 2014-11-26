@@ -602,7 +602,13 @@ public class ManagerPanel extends JPanel
 		itemProcessLabel.setBounds( 25, 165, 800, 40 );
 		itemOrderPanel.add( itemProcessLabel );
 		
-		int rowHeightItem = 230;
+
+		JLabel updateItemStockLabel = new JLabel( "Update Item Stock:" );
+		updateItemStockLabel.setFont( new Font( "serif", Font.PLAIN, 18 ) );
+		updateItemStockLabel.setBounds( 45, 205 , 800, 24 );
+		itemOrderPanel.add( updateItemStockLabel );
+		
+		int rowHeightItem = 260;
 		
 		// Process item updates
 		final JTextField itemUpcInput = new JTextField();
@@ -696,7 +702,12 @@ public class ManagerPanel extends JPanel
 
 		// TODO: implement adding new items
 		
-		int rowHeightNewItem = 290;
+		int rowHeightNewItem = rowHeightItem + 100;
+		
+		JLabel addNewItemLabel = new JLabel( "Add new items:" );
+		addNewItemLabel.setFont( new Font( "serif", Font.PLAIN, 18 ) );
+		addNewItemLabel.setBounds( 45, 300 , 800, 24 );
+		itemOrderPanel.add( addNewItemLabel );
 		
 		// Create element for entering the year
 		final JComboBox newItemYearDropdown = new JComboBox();
