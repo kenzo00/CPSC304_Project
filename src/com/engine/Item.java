@@ -291,5 +291,33 @@ public class Item {
 		
 		return upc;
 	}
+	
+	public String getTitle(int upc) {
+		String title = null;
+		String query = "SELECT title from CPSC304.Item where upc = " +upc;
+		
+		try 
+		{
+			// Prepare and execute the select statement
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			ResultSet result = ps.executeQuery();
+			
+			while ( result.next() )
+			{
+				// Get the name of the Item
+				title = result.getString(1);
+			}
+						
+			ps.close();
+
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			System.out.println("Failed to execute select statement:\n" + query + "\nError Message: " + e.getMessage());
+		}
+		
+		return title;
+	}
 
 }
