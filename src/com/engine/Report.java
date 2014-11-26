@@ -75,7 +75,7 @@ public class Report
 	public TableInfo getTopSellingItems ( Date day, int n )
 	{
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( "SELECT i.title AS `Item Title`, i.company AS `Company`, " );
+		stringBuilder.append( "SELECT i.title AS `Item Title`,'" ).append( day ).append( "' AS `Date`, i.company AS `Company`, " );
 		stringBuilder.append( "i.stock AS `Stock`, SUM(p.quantity) AS `Number Sold` " );
 		stringBuilder.append( "FROM Item i, `Order` o, PurchaseItem p " );
 		stringBuilder.append( "WHERE o.date='" ).append( day );
@@ -200,7 +200,7 @@ public class Report
 	public TableInfo getDailyReport( Date day )
 	{
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( "SELECT i.upc AS `UPC`, i.title AS `Item Name`, i.category AS `Category`, " );
+		stringBuilder.append( "SELECT i.upc AS `UPC`, i.title AS `Item Name`, '" ).append( day ).append( "' AS `Date`, i.category AS `Category`, " );
 		stringBuilder.append( "i.price AS `Unit Price`, p.quantity AS `Units Sold`, " );
 		stringBuilder.append( "ROUND(i.price*p.quantity,2) AS `Total Value`, o.date AS `Date` " );
 		stringBuilder.append( "FROM Item i, `Order` o, PurchaseItem p WHERE o.date =\"" );
@@ -269,7 +269,7 @@ public class Report
 	public TableInfo getDailyReportTotals( Date day )
 	{
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( "SELECT i.category AS `Category`, SUM( p.quantity ) AS `Total Units Sold`, " );
+		stringBuilder.append( "SELECT '" ).append( day ).append( "' AS `Date`, i.category AS `Category`, SUM( p.quantity ) AS `Total Units Sold`, " );
 		stringBuilder.append( "SUM( ROUND( i.price*p.quantity,2 ) ) AS `Total Value` " );
 		stringBuilder.append( "FROM Item i, `Order` o, PurchaseItem p " );
 		stringBuilder.append( "WHERE o.date = \"" ).append( day ).append( "\" AND p.receiptId = o.receiptId AND i.upc = p.upc " );
