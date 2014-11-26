@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +20,7 @@ public class Order {
 
 	Customer c = new Customer();
 	Item i = new Item();
-	Map<Integer, List<String>> shopCart = new HashMap<Integer, List<String>>();
+	Map<Integer, Integer> shopCart = new HashMap<Integer, Integer>();
 
 	//Testing Variables 
 	String fakeCard = "8888888888888888";
@@ -115,7 +113,6 @@ public class Order {
 	public void purchaseItem(int upc, int qty){
 		boolean outOfStock = isOutOfStock(upc);
 		boolean enoughStock = (qty == checkStock(upc, qty));
-		List<String> listofValues = new ArrayList<String>();
 
 		if (outOfStock) {
 			return;
@@ -123,8 +120,6 @@ public class Order {
 
 		else if (enoughStock) {
 			if(shopCart.containsKey(upc)) {
-				//String name = 
-				listofValues.add(e)
 				shopCart.put(upc, shopCart.get(upc)+qty);
 			}
 			else
@@ -228,12 +223,15 @@ public class Order {
 		}
 	}*/
 
-	// generate a receiptId
-	// take the latest receiptId and increment by 1
 	
+	// get the Cart
 	public Map getCart() {
 		return this.shopCart;
 	}
+	
+	
+	// generate a receiptId
+	// take the latest receiptId and increment by 1
 	private void generateId() {
 		String query = "SELECT receiptId FROM cpsc304.`Order` ORDER BY receiptId DESC LIMIT 1;";
 
