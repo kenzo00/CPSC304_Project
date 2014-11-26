@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 
 import com.engine.Item;
+import com.engine.Order;
 import com.engine.Report;
 import com.engine.TableInfo;
 
@@ -66,6 +67,8 @@ public class ManagerPanel extends JPanel
 	private int deliveryYear;
 	private int deliveryMonth;
 	private int deliveryDay;
+	private int newItemYear;
+	private String newItemType;
 
 	public ManagerPanel()
 	{
@@ -449,6 +452,8 @@ public class ManagerPanel extends JPanel
 		itemOrderPanel.setLayout( null );
 
 		int rowHeightOrder = 80;
+		int dropdownHeight = 20;
+		int dropdownWidth = 85;
 
 		// ==========================================================================
 
@@ -475,7 +480,7 @@ public class ManagerPanel extends JPanel
 		deliveryYear = currentYear;
 
 		itemOrderPanel.add(deliverYearDropdown);
-		deliverYearDropdown.setBounds( 100, rowHeightOrder, 60, 18 );
+		deliverYearDropdown.setBounds( 100, rowHeightOrder, dropdownWidth, dropdownHeight );
 		deliverYearDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -502,7 +507,7 @@ public class ManagerPanel extends JPanel
 		deliveryMonth = 1;
 
 		itemOrderPanel.add(deliveryMonthDropdown);
-		deliveryMonthDropdown.setBounds( 170, rowHeightOrder, 50, 18 );
+		deliveryMonthDropdown.setBounds( 100 + dropdownWidth + 10, rowHeightOrder, dropdownWidth/2, dropdownHeight );
 		deliveryMonthDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -529,7 +534,7 @@ public class ManagerPanel extends JPanel
 		deliveryDay = 1;
 
 		itemOrderPanel.add(deliveryDayDropdown);
-		deliveryDayDropdown.setBounds( 230, rowHeightOrder, 50, 18 );
+		deliveryDayDropdown.setBounds( 100 + dropdownWidth + dropdownWidth/2 + 2*10, rowHeightOrder, dropdownWidth/2, dropdownHeight );
 		deliveryDayDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -541,6 +546,10 @@ public class ManagerPanel extends JPanel
 
 		final ManagerPanel managerPanel = this;
 		final Report report = new Report();
+		
+		// Process order delivery
+		final JTextField receiptIdInput = new JTextField();
+		receiptIdInput.setBounds( 320, rowHeightOrder, 100, 20 );
 
 		JButton setDeliveryDateButton = new JButton();
 		setDeliveryDateButton.addActionListener( new ActionListener() {
@@ -554,8 +563,13 @@ public class ManagerPanel extends JPanel
 				System.out.println(dateString);
 
 				Date sqlDate = Date.valueOf( dateString );
+				
+				//int receiptId = receiptIdInput.getText();
 
 				// TODO: Implement setting delivery date for a certain order
+				// DONE
+				Order order = new Order();
+				order.deliverOrder( 5, sqlDate );
 			}
 
 		});
@@ -568,10 +582,6 @@ public class ManagerPanel extends JPanel
 		itemOrderPanel.add(setDeliveryDateButton);
 		setDeliveryDateButton.setText( "Deliver Order" );
 		setDeliveryDateButton.setBounds( 470, rowHeightOrder, 120, 18 );
-		
-		// Process order delivery
-		final JTextField receiptIdInput = new JTextField();
-		receiptIdInput.setBounds( 320, rowHeightOrder, 100, 20 );
 		
 		// Heading Text
 		JLabel orderProcessLabel = new JLabel( "Order Processing" );
@@ -594,7 +604,7 @@ public class ManagerPanel extends JPanel
 		
 		int rowHeightItem = 230;
 		
-		// Process order delivery
+		// Process item updates
 		final JTextField itemUpcInput = new JTextField();
 		itemUpcInput.setBounds( 100, rowHeightItem, 100, 20 );
 
@@ -632,30 +642,217 @@ public class ManagerPanel extends JPanel
 				String quantityString = itemQuantityInput.getText();
 				String priceString = itemPriceInput.getText();
 				
-				int upc = Integer.parseInt( upcString );
-				int quantity = Integer.parseInt( quantityString );
-				double price;
-				
-				if ( priceString.equals( "" ) )
+				if ( upcString.equals("") || quantityString.equals("") )
 				{
-					price = 0.0;
+					JOptionPane.showMessageDialog(managerPanel, 
+							"Please fill both upc and quantity fields.",
+							"Missing Fields",
+							JOptionPane.ERROR_MESSAGE);
+					
 				}
 				else
 				{
-					price = Double.parseDouble( priceString );
-				}
+					int upc;
+					int quantity;
+					double price;
+					try
+					{
+						upc = Integer.parseInt( upcString );
+						quantity = Integer.parseInt( quantityString );
+						if ( priceString.equals( "" ) )
+						{
+							price = 0.0;
+						}
+						else
+						{
+							price = Double.parseDouble( priceString );
+						}
 
-				// TODO: Implement updating item?
-				Item item = new Item();
-				
+						Item item = new Item();
+						if ( !item.itemExist( upc ) )
+						{
+							JOptionPane.showMessageDialog(managerPanel, 
+									"Invalid UPC. Item does not exist",
+									"Invalid UPC Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						item.updateStock( upc, quantity, "+" );
+					}
+					catch ( NumberFormatException nfe )
+					{
+						JOptionPane.showMessageDialog(managerPanel, 
+								"Please make sure the fields upc, quantity and price contain numbers.",
+								"Invalid input",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 
 		});
 		
 		itemOrderPanel.add(updateItemButton);
-		updateItemButton.setText( "Add Item" );
+		updateItemButton.setText( "Update Item" );
 		updateItemButton.setBounds( 470, rowHeightItem, 120, 18 );
 
+		// TODO: implement adding new items
+		
+		int rowHeightNewItem = 290;
+		
+		// Create element for entering the year
+		final JComboBox newItemYearDropdown = new JComboBox();
+
+		for (int i = 0; i < currentYear - 1900 + 1; i++)
+		{
+			newItemYearDropdown.addItem( currentYear - i );
+		}
+		newItemYearDropdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				newItemYear = (Integer)deliverYearDropdown.getSelectedItem();
+			}
+		});
+		newItemYear = currentYear;
+		
+		itemOrderPanel.add(newItemYearDropdown);
+		newItemYearDropdown.setBounds( 760, rowHeightNewItem, 85, 20 );
+		newItemYearDropdown.setMaximumRowCount(12);
+		
+		final JComboBox newItemTypeDropdown = new JComboBox();
+
+		String[] types = { "DVD", "CD" };
+		for (int i = 0; i < types.length; i++)
+		{
+			newItemTypeDropdown.addItem( types[i] );
+		}
+		newItemTypeDropdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				newItemType = (String)newItemTypeDropdown.getSelectedItem();
+			}
+		});
+		newItemType = "DVD";
+
+		itemOrderPanel.add(newItemTypeDropdown);
+		newItemTypeDropdown.setBounds( 855, rowHeightNewItem, 85, 20 );
+		newItemTypeDropdown.setMaximumRowCount(12);
+		
+		// Process adding new items
+		final JTextField newItemUpcInput = new JTextField();
+		newItemUpcInput.setBounds( 100, rowHeightNewItem, 100, 20 );
+
+		final JTextField newItemTitleInput = new JTextField();
+		newItemTitleInput.setBounds( 210, rowHeightNewItem, 100, 20 );
+
+		final JTextField newItemPriceInput = new JTextField();
+		newItemPriceInput.setBounds( 320, rowHeightNewItem, 100, 20 );
+		
+		final JTextField newItemCategoryInput = new JTextField();
+		newItemCategoryInput.setBounds( 430, rowHeightNewItem, 100, 20 );
+
+		final JTextField newItemCompanyInput = new JTextField();
+		newItemCompanyInput.setBounds( 540, rowHeightNewItem, 100, 20 );
+
+		final JTextField newItemStockInput = new JTextField();
+		newItemStockInput.setBounds( 650, rowHeightNewItem, 100, 20 );
+		
+		itemOrderPanel.add( newItemUpcInput );
+		itemOrderPanel.add( newItemTitleInput );
+		itemOrderPanel.add( newItemPriceInput );
+		itemOrderPanel.add( newItemCategoryInput );
+		itemOrderPanel.add( newItemCompanyInput );
+		itemOrderPanel.add( newItemStockInput );
+
+		JLabel newItemUpcLabel = new JLabel( "UPC:" );
+		newItemUpcLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemUpcLabel );
+		newItemUpcLabel.setBounds( 100, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemQuantityLabel = new JLabel( "Title:" );
+		newItemQuantityLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemQuantityLabel );
+		newItemQuantityLabel.setBounds( 210, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemPriceLabel = new JLabel( "Price:" );
+		newItemPriceLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemPriceLabel );
+		newItemPriceLabel.setBounds( 320, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemCategoryLabel = new JLabel( "Category:" );
+		newItemCategoryLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemCategoryLabel );
+		newItemCategoryLabel.setBounds( 430, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemCompanyLabel = new JLabel( "Company:" );
+		newItemCompanyLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemCompanyLabel );
+		newItemCompanyLabel.setBounds( 540, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemStockLabel = new JLabel( "Stock:" );
+		newItemStockLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemStockLabel );
+		newItemStockLabel.setBounds( 650, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemYearLabel = new JLabel( "Year:" );
+		newItemYearLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemYearLabel );
+		newItemYearLabel.setBounds( 760, rowHeightNewItem - 25, 200, 20 );
+		
+		JLabel newItemTypeLabel = new JLabel( "Type:" );
+		newItemTypeLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
+		itemOrderPanel.add( newItemTypeLabel );
+		newItemTypeLabel.setBounds( 855, rowHeightNewItem - 25, 200, 20 );
+		
+		JButton addNewItemButton = new JButton();
+		addNewItemButton.addActionListener( new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) 
+			{
+				String upcString = newItemUpcInput.getText();
+				String stockString = newItemStockInput.getText();
+				String priceString = newItemPriceInput.getText();
+				String titleString = newItemTitleInput.getText();
+				String categoryString = newItemCategoryInput.getText();
+				String companyString = newItemCompanyInput.getText();
+				
+				if ( upcString.equals("") 
+					|| stockString.equals("")
+					|| priceString.equals("")
+					|| titleString.equals("")
+					|| categoryString.equals("")
+					|| companyString.equals("") )
+				{
+					JOptionPane.showMessageDialog(managerPanel, 
+							"Please make sure all the fields are not empty.",
+							"Missing input error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					try
+					{
+						int year = Integer.valueOf( newItemYear );
+						int upc = Integer.parseInt( upcString );
+						int stock = Integer.parseInt( stockString );
+						double price = Double.parseDouble( priceString );
+						
+						Item item = new Item();
+						item.addItem( upc, titleString, newItemType, categoryString, companyString, year, price, stock );
+					}
+					catch ( NumberFormatException nfe )
+					{
+						JOptionPane.showMessageDialog(managerPanel, 
+								"Please make sure upc, stock and price contain numbers.",
+								"Invalid input error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+
+
+				}
+			}
+
+		});
+		
+		itemOrderPanel.add(addNewItemButton);
+		addNewItemButton.setText( "Add Item" );
+		addNewItemButton.setBounds( 970, rowHeightNewItem, 120, 18 );
 	}
 
 }
