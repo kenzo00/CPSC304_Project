@@ -747,6 +747,8 @@ public class CustomerPanel extends JPanel
 
 
 			public void actionPerformed(ActionEvent e) {
+				
+				// Check if credit card number is invalid
 				String cardNum = cardNumField.getText();
 				if (cardNum.isEmpty()){
 					JOptionPane.showMessageDialog(customerPanel, 
@@ -756,16 +758,54 @@ public class CustomerPanel extends JPanel
 				}
 
 				String year = String.valueOf( expiredDateYear );
+				int yearInt = Integer.parseInt(year);
 				String month = String.valueOf( expiredDateMonth );
+				int monthInt = Integer.parseInt(month);
 				String date = String.valueOf( expiredDateDay );
+				int dateInt = Integer.parseInt(date);
 				String dateString = year + "-" + month + "-" + date;
 				System.out.println(dateString);
 
 				Date sqlDate = Date.valueOf( dateString );
-				
+
 				System.out.println(sqlDate.toString()+"this is the expiry date");
 				int temp = order.outstandingOrder();
 				int numofDays = order.calcDate(temp);
+				boolean isDateValid = true;
+
+				// Check if the date entered is valid
+				if (yearInt % 4 == 0){
+					if (monthInt == 2) {
+						if (dateInt > 29) {
+							isDateValid = false;
+						}
+					}
+					else if (monthInt % 2 == 0 && monthInt != 8) {
+						if(dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+				else if (!(yearInt % 4 ==0)) {
+					if (monthInt == 2) {
+						if (dateInt > 28) {
+							isDateValid = false;
+						}
+					}
+					if (monthInt % 2 == 0 && monthInt != 8) {
+						if (dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+
+				if (!isDateValid) {
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Expiry Date is invalid", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 
 				System.out.println(cidUser);
 				int receiptId = order.checkOut(cardNum, sqlDate, cidUser);
