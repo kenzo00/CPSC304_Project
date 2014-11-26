@@ -362,14 +362,11 @@ public class Item {
 		return price;
 	}
 
-	public TableInfo getRefundItem(int ReceiptID, int upc, int quantity) {
+	public TableInfo getRefundItem( int upc, int quantity) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( " SELECT i.upc AS `UPC`, p.receiptId AS `Receipt`, i.type AS `Type`, i.category AS `Category`, i.company AS `Company`, i.year AS `Year`, i.price AS `Price`, i.stock AS `Stock` ");
-		stringBuilder.append( " FROM Item i, `Order` o, PurchaseItem p ");
-		stringBuilder.append( " WHERE p.receiptId= ").append(ReceiptID);
-		stringBuilder.append( " AND i.upc= ").append(upc);
-		stringBuilder.append( " GROUP BY p.receiptId, p.upc, p.quantity");
+		stringBuilder.append( " select i.upc AS `UPC`, i.title AS `Item Name`, i.stock AS `Current Stock`, " );
+		stringBuilder.append( quantity ).append( " AS `Quantity Refunded` from item i where upc=" ).append( upc );
 						
 		String query = stringBuilder.toString();
 		System.out.println( query );

@@ -181,43 +181,45 @@ public class ClerkPanel extends JPanel {
 							System.out.println("false new refund");
 						}
 
-						else {
+						else 
+						{
 
 							transaction.refund( rec, uNumber );
 							System.out.println("actually refunding");
-						}
-						System.out.println("just after refund");
 
-						//KENNETH TO DO NO IDEA WHAT HAPPENS AFTER THIS POINT IN TIME
+							System.out.println("just after refund");
 
-						// correct fields, update table
-						//else if () {
-						// Fields are correct, search and update quantity
+							//KENNETH TO DO NO IDEA WHAT HAPPENS AFTER THIS POINT IN TIME
 
-						//insert method to update table TODO
+							// correct fields, update table
+							//else if () {
+							// Fields are correct, search and update quantity
 
-						clerkPanel.clerkTableInfo = i.getRefundItem(rec, uNumber, itemNum);
-						if ( tableHeaders == null )
-						{
-							tableHeaders = clerkTableInfo.getHeaders();
+							//insert method to update table TODO
+
+							clerkPanel.clerkTableInfo = i.getRefundItem( uNumber, itemNum);
+							if ( tableHeaders == null )
+							{
+								tableHeaders = clerkTableInfo.getHeaders();
+							}
+							if ( tableData != null )
+							{
+								int newInputLength = clerkTableInfo.getData().length;
+								int currentDataLength = tableData.length;
+								String[][] newData = new String[newInputLength + currentDataLength][];
+								System.arraycopy(clerkTableInfo.getData(), 0, newData, 0, newInputLength);
+								System.arraycopy(tableData, 0, newData, newInputLength, tableData.length);
+								System.out.println(newInputLength);
+								tableData = newData;
+							}
+							else
+							{
+								System.out.println(clerkTableInfo.getData().length + "OMG");
+								tableData = new String[clerkTableInfo.getData().length][];
+								System.arraycopy(clerkTableInfo.getData(), 0, tableData, 0, clerkTableInfo.getData().length);
+							}
+							displayClerkTable();
 						}
-						if ( tableData != null )
-						{
-							   int newInputLength = clerkTableInfo.getData().length;
-							   int currentDataLength = tableData.length;
-							   String[][] newData = new String[newInputLength + currentDataLength][];
-							   System.arraycopy(clerkTableInfo.getData(), 0, newData, 0, newInputLength);
-							   System.arraycopy(tableData, 0, newData, newInputLength, tableData.length);
-							   System.out.println(newInputLength);
-							   tableData = newData;
-						}
-						else
-						{
-							System.out.println(clerkTableInfo.getData().length + "OMG");
-							tableData = new String[clerkTableInfo.getData().length][];
-							System.arraycopy(clerkTableInfo.getData(), 0, tableData, 0, clerkTableInfo.getData().length);
-						}
-						displayClerkTable();
 					}
 					catch ( NumberFormatException nfe )
 					{
@@ -304,6 +306,12 @@ public class ClerkPanel extends JPanel {
 		clerkTablePanel = new JLabel();
 		clerkTablePanel.setLayout( new BorderLayout() );
 		returnPanel.add( clerkTablePanel );
+		
+		JLabel historyLabel = new JLabel( "Refund History:" );
+		historyLabel.setFont( new Font( "serif", Font.BOLD, 18 ) );
+		historyLabel.setBounds( 45, 150 , 800, 24 );
+		returnPanel.add( historyLabel );
+		
 	}
 
 	private void displayClerkTable()
@@ -312,7 +320,7 @@ public class ClerkPanel extends JPanel {
 		clerkTablePanel.removeAll();
 		clerkTablePanel.add(clerkTable.getTableHeader(), BorderLayout.NORTH);
 		clerkTablePanel.add(clerkTable, BorderLayout.CENTER);
-		clerkTablePanel.setBounds( 5, 150, 1000, 16*tableData.length + 18 );
+		clerkTablePanel.setBounds( 5, 180, 1000, 16*tableData.length + 18 );
 		clerkTablePanel.revalidate();
 		clerkTablePanel.repaint();
 		returnPanel.setBounds( 0, 0, 1100, 150 + 16*tableData.length + 100 );
