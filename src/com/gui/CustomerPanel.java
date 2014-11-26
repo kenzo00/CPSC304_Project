@@ -94,8 +94,6 @@ public class CustomerPanel extends JPanel
 
 	public CustomerPanel()
 	{
-		// TODO: add gui for registration - DONE. Make changes if you don't like it?
-		// TODO: add gui for purchasing items
 
 		this.setLayout( null );
 		initializeLoginPanel();
@@ -411,7 +409,7 @@ public class CustomerPanel extends JPanel
 		});
 
 		searchButton.setText( "Search" );
-		searchButton.setBounds( 350, topItem, 80, 30 );
+		searchButton.setBounds( 70 + xSpacing*3, topItem + textFieldSpacing+ labelSpacing, 80, 18 );
 
 		searchTitle = new JLabel();
 		purchaseItemPanel.add(searchTitle);
@@ -487,7 +485,7 @@ public class CustomerPanel extends JPanel
 
 		});
 		addCartButton.setText( "Add to Cart" );
-		addCartButton.setBounds( 325, topItem + textFieldSpacing*3, 125, 30 );
+		addCartButton.setBounds( 70 + xSpacing*2, topItem + textFieldSpacing*4 + labelSpacing, 100, 18 );
 
 		// My cart button
 		JButton cartButton = new JButton();
@@ -573,7 +571,7 @@ public class CustomerPanel extends JPanel
 					}
 
 				}
-				
+
 				JOptionPane.showMessageDialog(customerPanel, 
 						"You have successfully logged out, your cart has been emptied", "",
 						JOptionPane.PLAIN_MESSAGE);
@@ -716,7 +714,9 @@ public class CustomerPanel extends JPanel
 		// ==========================================================================
 
 		// Create element for entering the day
+
 		List<Integer> dayList = new ArrayList<Integer>();
+
 		for ( int i = 0; i < 31; i++ )
 		{
 			dayList.add( i + 1 );
@@ -737,7 +737,7 @@ public class CustomerPanel extends JPanel
 		expiredDateDay = 1;
 
 		checkOutPanel.add(expiredDayDropdown);
-		expiredDayDropdown.setBounds( 60+xSpacing+175, 100+textFieldSpacing, 60, 20 );
+		expiredDayDropdown.setBounds( 60+xSpacing+175, 100+textFieldSpacing, 80, 20 );
 		expiredDayDropdown.setMaximumRowCount(12);
 
 
@@ -764,7 +764,7 @@ public class CustomerPanel extends JPanel
 				Date sqlDate = Date.valueOf( dateString );
 				int temp = order.outstandingOrder();
 				int numofDays = order.calcDate(temp);
-				
+
 				System.out.println(cidUser);
 				order.checkOut(cardNum, sqlDate, cidUser);
 
@@ -775,7 +775,7 @@ public class CustomerPanel extends JPanel
 				JOptionPane.showMessageDialog(customerPanel, 
 						"Your item will be delievered in " + numofDays + " days", "Success",
 						JOptionPane.PLAIN_MESSAGE);
-				
+
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to make more purchases?");
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					order = new Order();
@@ -784,8 +784,8 @@ public class CustomerPanel extends JPanel
 					checkOutPanel.setVisible( false );
 					initializePurchaseItemPanel();		
 					purchaseItemPanel.setVisible( true );
-					
-					
+
+
 				}
 				else if (dialogResult == JOptionPane.NO_OPTION){
 					order = new Order();
@@ -795,7 +795,7 @@ public class CustomerPanel extends JPanel
 					initializeLoginPanel();		
 					loginPanel.setVisible( true );
 				}
-					
+
 			}
 
 		});
@@ -824,7 +824,6 @@ public class CustomerPanel extends JPanel
 						"You have successfully logged out, your cart has been emptied", "",
 						JOptionPane.PLAIN_MESSAGE);
 				// Logout and return to login page.
-				// TODO: clear any fields that are specific to the logged in user
 				customerName = "";
 				customerId = "";
 				order = new Order();

@@ -22,26 +22,9 @@ public class Order {
 	Item i = new Item();
 	Map<Integer, Integer> shopCart = new HashMap<Integer, Integer>();
 
-	//Testing Variables 
-	String fakeCard = "8888888888888888";
-	String blankString = "";
-	LocalDate currentDate2 = LocalDate.now();
-	Date fakeDate = Date.valueOf(currentDate2);
-
 
 	public Order() {
 
-
-	}
-
-	// TODO need to talk to UI to get the info we need
-	// Assuming we have all the info we need atm for the purpose of testing
-	public void onlineOrder(int cid, String password){
-		login(cid, password);
-		//UI - get Item name info TODO
-		searchItem(blankString, blankString, "Jay Chou");
-
-		checkOut(fakeCard, fakeDate, cid);
 
 	}
 
@@ -190,53 +173,9 @@ public class Order {
 			// Execute the query
 			Engine.getInstance().getQueries().insertQuery( "PurchaseItem", values2 );
 
-
-
 		}
-
-
-		/*for (Integer upc: shopCart.keySet()){	
-			int qty = shopCart.get(upc);
-
-			//Insert this record to PurchaseItem table
-			// Build the sql query
-			StringBuilder stringBuilder2 = new StringBuilder();
-			stringBuilder2.append( "(" ).append( this.receiptId ).append( "," ).append( upc ).append( "," ).append( qty );
-			String values2 = stringBuilder2.append( ")" ).toString();
-
-			// Execute the query
-			Engine.getInstance().getQueries().insertQuery( "PurchaseItem", values2 );
-
-
-			String upcKey = upc.toString();
-			String qtyValue = shopCart.get(upc).toString();  
-			System.out.println(upcKey + " " + qtyValue);  
-		} */
 
 	}
-
-	// find the upc of an Item
-	/*private TableInfo findItem(String category, String title, String leadSinger) {
-
-		// Call method in Item, should return the upc.
-		if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
-			return i.getItems("c", category, title, leadSinger);
-		}
-
-		else if (!title.isEmpty()&&(category.isEmpty()||leadSinger.isEmpty())){
-			return i.getItems("t", category, title, leadSinger);
-		}
-
-		else if (!leadSinger.isEmpty()&&(title.isEmpty()||category.isEmpty())){
-			return i.getItems("s", category, title, leadSinger);
-		}
-
-		else{
-			return i.getItems("all", category, title, leadSinger);
-
-		}
-	}*/
-
 
 	// get the Cart
 	public Map<Integer, Integer> getCart() {
