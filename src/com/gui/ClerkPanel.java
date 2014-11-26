@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import com.engine.Customer;
 import com.engine.Item;
 import com.engine.Order;
+import com.engine.PurchaseItem;
 import com.engine.Report;
 import com.engine.Return;
 import com.engine.TableInfo;
@@ -34,21 +35,24 @@ public class ClerkPanel extends JPanel {
 	// Panel for displaying return GUI
 	private JPanel returnPanel;
 	private JPanel displayReturnPanel;
-	
+
 	private JTextField receipt;
 	private JTextField upc;
 	private JTextField item;
-	
+
 	private JTable displayRTable;
-	
+
+	// Table displaying stuff
 	private TableInfo clerkTableInfo;
 	private JLabel clerkTablePanel;
 	private JTable clerkTable;
+	private String[] tableHeaders;
+	private String[][] tableData;
 
 	private String receiptID;
 	private String upcNumber;
 	private String itemNumber;
-	
+
 	private JLabel begin;
 	private JLabel reportLabel;
 	private JLabel displayRTPanel;
@@ -87,18 +91,18 @@ public class ClerkPanel extends JPanel {
 		receipt = new JTextField();
 		receipt.setBounds(40 + textFieldSpacing, yAxis , 200, 20);
 
-		JLabel upcText = new JLabel("UPC ID: ");
+		JLabel upcText = new JLabel("UPC: ");
 		upcText.setFont( new Font( "serif", Font.BOLD, 14 ));
-		upcText.setBounds(400, yAxis, 800, 24);
+		upcText.setBounds(430, yAxis, 800, 24);
 		upc = new JTextField();
 		upc.setBounds(400 + textFieldSpacing, yAxis , 200, 20);
+		//
+		//		JLabel itemText = new JLabel("Quantity: ");
+		//		itemText.setFont( new Font( "serif", Font.BOLD, 14 ));
+		//		itemText.setBounds(750, yAxis, 400, 24);
+		//		item = new JTextField();
+		//		item.setBounds(750 + textFieldSpacing, yAxis , 200, 20);
 
-		JLabel itemText = new JLabel("Quantity: ");
-		itemText.setFont( new Font( "serif", Font.BOLD, 14 ));
-		itemText.setBounds(750, yAxis, 400, 24);
-		item = new JTextField();
-		item.setBounds(750 + textFieldSpacing, yAxis , 200, 20);
-		
 		final ClerkPanel cPanel = this;
 		final Item i = new Item();
 
@@ -108,92 +112,132 @@ public class ClerkPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				Return transaction = new Return();
-				
+
 				String receiptID = clerkPanel.receipt.getText();
 				receiptID = clerkPanel.receipt.getText();
 
 				String upcNumber = new String();
 				upcNumber = clerkPanel.upc.getText();
-
-				String itemNumber = new String();
-				itemNumber = clerkPanel.item.getText();
+				//
+				//				String itemNumber = new String();
+				//				itemNumber = clerkPanel.item.getText();
 
 				// missing fields
-				if (receiptID.equals("") || upcNumber.equals("") || itemNumber.equals("")) {	
+				if (receiptID.equals("") || upcNumber.equals("") /*|| itemNumber.equals("")*/) 
+				{	
 					JOptionPane.showMessageDialog( clerkPanel,
 							"Please fill in all required fields.",
 							"Update error",
 							JOptionPane.ERROR_MESSAGE);
 					System.out.println("missing");
 				}
-				
+				else
+				{
+					//				
+					//
+					//				int itemNum = Integer.parseInt(itemNumber);
+					//				
+					//				if (itemNum < 1) {
+					//					JOptionPane.showMessageDialog( clerkPanel,
+					//							"Please enter valid quantity value.",
+					//							"Update error",
+					//							JOptionPane.ERROR_MESSAGE);
+					//				}
+					PurchaseItem purchaseItem = new PurchaseItem();
+					int itemNum;
 
-				int itemNum = Integer.parseInt(itemNumber);
-				
-				if (itemNum < 1) {
-					JOptionPane.showMessageDialog( clerkPanel,
-							"Please enter valid quantity value.",
-							"Update error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-				int rec = Integer.parseInt(receiptID);
-				int uNumber = Integer.parseInt(upcNumber);
-				
-				System.out.println("after rec/uNumber");
-				
+					try
+					{
+						int rec = Integer.parseInt(receiptID);
+						int uNumber = Integer.parseInt(upcNumber);
+						itemNum = purchaseItem.getQuantity( rec, uNumber );
 
-				// USING BRYAN'S CODE HERE
-				
-				if ((transaction.isValid(rec) == false)) {
-					JOptionPane.showMessageDialog( clerkPanel,
-							"Cannot refund, after 15 days or invalid receipt number.",
-							"Update error",
-							JOptionPane.ERROR_MESSAGE);
-					System.out.println("false isvalid");
-				}
-				
-				if ((transaction.isCorrectUpc(rec, uNumber)) == false) {
-					JOptionPane.showMessageDialog( clerkPanel,
-							"No matching item. Please check receipt.",
-							"Update error",
-							JOptionPane.ERROR_MESSAGE);
-					System.out.println("false is correctupc");
-				}
-				
-				if ((transaction.newRefund(rec, uNumber)) == false) {
-					JOptionPane.showMessageDialog( clerkPanel,
-					"Refund has already been processed. Cannot refund.",
-					"Update error",
-					JOptionPane.ERROR_MESSAGE);
-					System.out.println("false new refund");
-				}
-				
-				else {
-									
-					transaction.refund( rec, uNumber );
-					System.out.println("actually refunding");
-				}
-				System.out.println("just after refund");
-				
-				//KENNETH TO DO NO IDEA WHAT HAPPENS AFTER THIS POINT IN TIME
+						System.out.println("after rec/uNumber");
 
-				// correct fields, update table
-				//else if () {
-					// Fields are correct, search and update quantity
 
-					//insert method to update table TODO
-				
-				clerkPanel.clerkTableInfo = i.getRefundItem(rec, uNumber, itemNum);
-				displayClerkTable();
+						// USING BRYAN'S CODE HERE
+
+						if ((transaction.isValid(rec) == false)) {
+							JOptionPane.showMessageDialog( clerkPanel,
+									"Cannot refund, after 15 days or invalid receipt number.",
+									"Update error",
+									JOptionPane.ERROR_MESSAGE);
+							System.out.println("false isvalid");
+						}
+
+						if ((transaction.isCorrectUpc(rec, uNumber)) == false) {
+							JOptionPane.showMessageDialog( clerkPanel,
+									"No matching item. Please check receipt.",
+									"Update error",
+									JOptionPane.ERROR_MESSAGE);
+							System.out.println("false is correctupc");
+						}
+
+						if ((transaction.newRefund(rec, uNumber)) == false) {
+							JOptionPane.showMessageDialog( clerkPanel,
+									"Refund has already been processed. Cannot refund.",
+									"Update error",
+									JOptionPane.ERROR_MESSAGE);
+							System.out.println("false new refund");
+						}
+
+						else {
+
+							transaction.refund( rec, uNumber );
+							System.out.println("actually refunding");
+						}
+						System.out.println("just after refund");
+
+						//KENNETH TO DO NO IDEA WHAT HAPPENS AFTER THIS POINT IN TIME
+
+						// correct fields, update table
+						//else if () {
+						// Fields are correct, search and update quantity
+
+						//insert method to update table TODO
+
+						clerkPanel.clerkTableInfo = i.getRefundItem(rec, uNumber, itemNum);
+						if ( tableHeaders == null )
+						{
+							tableHeaders = clerkTableInfo.getHeaders();
+						}
+						if ( tableData != null )
+						{
+							   int newInputLength = clerkTableInfo.getData().length;
+							   int currentDataLength = tableData.length;
+							   String[][] newData = new String[newInputLength + currentDataLength][];
+							   System.arraycopy(clerkTableInfo.getData(), 0, newData, 0, newInputLength);
+							   System.arraycopy(tableData, 0, newData, newInputLength, tableData.length);
+							   System.out.println(newInputLength);
+							   tableData = newData;
+						}
+						else
+						{
+							System.out.println(clerkTableInfo.getData().length + "OMG");
+							tableData = new String[clerkTableInfo.getData().length][];
+							System.arraycopy(clerkTableInfo.getData(), 0, tableData, 0, clerkTableInfo.getData().length);
+						}
+						displayClerkTable();
+					}
+					catch ( NumberFormatException nfe )
+					{
+						JOptionPane.showMessageDialog( clerkPanel,
+								"Please make sure receipt id and upc are numbers.",
+								"Input Error",
+								JOptionPane.ERROR_MESSAGE);
+						System.out.println("missing");
+					}
+
+				}
 			}
 		});
-		
+
 		searchButton.setText( "Return" );
-		searchButton.setBounds( 1050, yAxis, 85, 20 );
-		
-/*
+		searchButton.setBounds( 750, yAxis, 85, 20 );
+
+		/*
 		String[] columnNames = {"UPC", "Receipt", "Type", "Category", "Company", "Year", "Price", "Stock"};
-		
+
 		Object[][] data = {{"12341234", "1234", "Electronic", "Phone", "Apple", "2014", "$12.22", "2"}};
 		JTable table = new JTable (data, columnNames);
 		JScrollPane tableScrollPane = new JScrollPane(table);
@@ -202,28 +246,28 @@ public class ClerkPanel extends JPanel {
 
 		table.setAutoCreateRowSorter(true);
 		table.setShowGrid(true);*/
-		
-		
-		
-		
-/*		private void fillClerkReportPanel() {
-			
+
+
+
+
+		/*		private void fillClerkReportPanel() {
+
 			String tableReceipt = receipt.getText();
 			int tReceipt = Integer.parseInt(tableReceipt);
 			String tableUpc = receipt.getText();
 			int tUpc = Integer.parseInt(tableUpc);
 			String tableItem = receipt.getText();
 			int tItem = Integer.parseInt(tableItem);
-			
+
 			clerkPanel.clerkTableInfo = i.getRefundItem(tReceipt, tUpc, tItem);
 			displayReturnPanel.setPreferredSize( new Dimension (1000, 210 + 16* clerkTableInfo.getData().length));
-			
+
 			}
-		
+
 		displayRTPanel = new JLabel();
 		displayRPanel.add(displayRTPanel);
 		displayRTPanel.setLayout(new BorderLayout());
-		
+
 
 		private void displayRTPanel() {
 			displayRTable = new JTable(clerkTableInfo.getData(), clerkTableInfo.getHeaders());
@@ -243,8 +287,8 @@ public class ClerkPanel extends JPanel {
 		returnPanel.add(begin);
 		returnPanel.add(upc);
 		returnPanel.add(receipt);
-		returnPanel.add(itemText);
-		returnPanel.add(item);
+		//		returnPanel.add(itemText);
+		//		returnPanel.add(item);
 		returnPanel.add(begin2);
 		returnPanel.add(receiptText);
 		returnPanel.add(upcText);
@@ -253,23 +297,25 @@ public class ClerkPanel extends JPanel {
 		//returnPanel.add(tableScrollPane);
 		returnPanel.setBounds( 0, 0, MainInterface.WIDTH, MainInterface.HEIGHT );
 
-		JSeparator separator = new JSeparator( JSeparator.VERTICAL );
-		returnPanel.add( separator );
-		separator.setBounds( 600, 150, 1, 500 );
+		//		JSeparator separator = new JSeparator( JSeparator.VERTICAL );
+		//		returnPanel.add( separator );
+		//		separator.setBounds( 600, 150, 1, 500 );
 
 		clerkTablePanel = new JLabel();
 		clerkTablePanel.setLayout( new BorderLayout() );
 		returnPanel.add( clerkTablePanel );
 	}
-	
+
 	private void displayClerkTable()
 	{
-		clerkTable = new JTable(clerkTableInfo.getData(), clerkTableInfo.getHeaders());
+		clerkTable = new JTable(tableData, tableHeaders);
 		clerkTablePanel.removeAll();
 		clerkTablePanel.add(clerkTable.getTableHeader(), BorderLayout.NORTH);
 		clerkTablePanel.add(clerkTable, BorderLayout.CENTER);
-		clerkTablePanel.setBounds( 5, 150, 1000, 16*clerkTableInfo.getData().length + 18 );
+		clerkTablePanel.setBounds( 5, 150, 1000, 16*tableData.length + 18 );
 		clerkTablePanel.revalidate();
 		clerkTablePanel.repaint();
+		returnPanel.setBounds( 0, 0, 1100, 150 + 16*tableData.length + 100 );
+		this.setPreferredSize( new Dimension( 1100, 150 + 16*tableData.length + 100 ) );
 	}
 }

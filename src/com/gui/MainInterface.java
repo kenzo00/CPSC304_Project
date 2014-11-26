@@ -78,7 +78,7 @@ public class MainInterface extends JFrame
 //		clerkScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //		clerkScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		clerkScrollPane.setViewportView( clerkPanel );
-//	    clerkScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
+	    clerkScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
 		tabs.addTab( "Clerk", clerkScrollPane );
 		
 		managerPanel = new ManagerPanel();
