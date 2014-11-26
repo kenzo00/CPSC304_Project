@@ -768,10 +768,10 @@ public class CustomerPanel extends JPanel
 				int numofDays = order.calcDate(temp);
 
 				System.out.println(cidUser);
-				order.checkOut(cardNum, sqlDate, cidUser);
+				int receiptId = order.checkOut(cardNum, sqlDate, cidUser);
 
 				JOptionPane.showMessageDialog(customerPanel, 
-						"Checkout completed", "Success",
+						"Checkout completed, your ReceiptId is: "+receiptId, "Success",
 						JOptionPane.PLAIN_MESSAGE);
 
 				JOptionPane.showMessageDialog(customerPanel, 

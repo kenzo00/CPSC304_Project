@@ -141,7 +141,7 @@ public class Order {
 	}
 
 
-	public void checkOut(String cardNum, Date expiryDate, int cid){
+	public int checkOut(String cardNum, Date expiryDate, int cid){
 		this.cardNum = cardNum;
 		this.expiryDate = expiryDate;
 		generateId();
@@ -174,6 +174,7 @@ public class Order {
 			Engine.getInstance().getQueries().insertQuery( "PurchaseItem", values2 );
 
 		}
+		return this.receiptId;
 
 	}
 
