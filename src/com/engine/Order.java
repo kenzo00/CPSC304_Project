@@ -297,7 +297,83 @@ public class Order {
 		return outstandingNum;
 	}
 
+	// return false if order has already been delivered
+	// return true if order is successfully delivered
+	public boolean deliverOrder( int receiptId, Date date )
+	{
+		boolean isDelivered = false;
+		
+		isDelivered = isOrderDelivered( receiptId );
+		
+		if ( !isDelivered )
+		{
+			String query = "UPDATE cpsc304.`Order` SET deliveredDate = " + date;
+			
+			try 
+			{
+				// Prepare and execute the insert statement
+				PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+				ps.executeUpdate();
 
+				// Commit the changes
+				Engine.getInstance().getConnection().commit();
+
+				ps.close();
+
+			} 
+			catch (SQLException e) 
+			{
+				e.printStackTrace();
+				System.out.println("Failed to deliver order.\nReceiptId:" + "\nError Message: " + e.getMessage());
+				try
+				{
+					// The update failed. Revert the insert
+					Engine.getInstance().getConnection().rollback();
+				}
+				catch (SQLException ex)
+				{
+					// The rollback failed. Something is wrong.
+					// Exit the program
+					System.out.println("Error Message: " + ex.getMessage() );
+					System.exit(-1);
+				}
+			}
+		}
+		
+		return isDelivered;
+	}
+	
+	public boolean isOrderDelivered( int receiptId )
+	{
+		boolean isDelivered = false;
+		String query = "SELECT deliveredDate FROM cpsc304.`Order` WHERE receiptId=" + receiptId;
+
+		try 
+		{
+			// Create sql query
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+
+			// Execute sql query
+			ResultSet result = ps.executeQuery();
+
+			if ( result.next() )
+			{
+				if ( result.getDate(1) != null )
+				{
+					isDelivered = true;
+				}
+			}
+
+			ps.close();
+
+		}
+		catch ( SQLException e )
+		{
+			System.out.println( "Failed to execute Select Statement:\n" + query );
+			System.out.println(e.getMessage());
+		}
+		return isDelivered;
+	}
 
 
 }
