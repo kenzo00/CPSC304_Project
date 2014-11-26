@@ -751,6 +751,7 @@ public class CustomerPanel extends JPanel
 					JOptionPane.showMessageDialog(customerPanel, 
 							"Credit Card Number cannot be blank", "Error",
 							JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 
 				String year = String.valueOf( expiredDateYear );
