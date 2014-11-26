@@ -40,10 +40,10 @@ public class OrderTest
 	{
 		Order o = new Order(); 
 		o.login(6969, "123456");
-		o.purchaseItem(1, 30);
-		o.purchaseItem(1, 21);
+		o.purchaseItem(5, 30);
+		o.purchaseItem(3, 21);
 		o.purchaseItem(2, 10);
-		o.checkOut(fakeCard, fakeDate);
+		//o.checkOut(fakeCard, fakeDate);
 		
 		
 		

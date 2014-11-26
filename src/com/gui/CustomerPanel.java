@@ -8,9 +8,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.engine.Customer;
+import com.engine.Engine;
 import com.engine.Item;
 import com.engine.Order;
 import com.engine.TableInfo;
@@ -28,6 +38,9 @@ public class CustomerPanel extends JPanel
 {
 	// Panel for displaying login GUI
 	private JPanel loginPanel;
+
+	// Constant representing the starting year of the AMS store
+	private final static int START_YEAR = 2014;
 
 	// Elements used for login GUI
 	// Elements for login
@@ -53,10 +66,31 @@ public class CustomerPanel extends JPanel
 	private JLabel searchTablePanel;
 	private JLabel searchTitle;
 
+	//Elements for CheckOut
+	private JTextField cardNumField;
+	private JTextField expiredDateField;
+	private int expiredDateYear;
+	private int expiredDateMonth;
+	private int expiredDateDay;
+
 	// Panel for dispalying purchase GUI
 	private JPanel purchaseItemPanel;
 	private String customerName;
 	private String customerId;
+
+	// Panel for Checkout GUI
+	private JPanel checkOutPanel;
+
+	// Class initialization
+	private Order order = new Order();
+	private Item item = new Item();
+
+	// CheckOut Label
+	private JLabel billInfoLabel;
+
+	// Variables to keep track of User Info
+	int cidUser;
+	Map<Integer, Integer> myCart;
 
 	public CustomerPanel()
 	{
@@ -129,6 +163,8 @@ public class CustomerPanel extends JPanel
 				// TODO: Check if password is correct in the if statement condition
 				else if ( order.login(cid, password) )
 				{
+					// Update the cid to keep track
+					cidUser = cid;
 					// Password is correct. Continue to shopping page.
 					customerPanel.customerId = userId;
 					Customer customer = new Customer();
@@ -283,8 +319,7 @@ public class CustomerPanel extends JPanel
 		int labelSpacing = 20;
 		int textFieldSpacing = 30;
 		int xSpacing = 100;
-		int buttonSpacing = 40;
-		int headerSpacing = 36;
+
 
 		// Heading Text
 		JLabel welcome = new JLabel( "Welcome to the AMS shopping system." );
@@ -296,7 +331,7 @@ public class CustomerPanel extends JPanel
 		welcome2.setBounds( 45, 65 , 400, 20 );	
 
 		// Search Bar
-		JLabel searchLabel = new JLabel ("Seach for your item...");
+		JLabel searchLabel = new JLabel ("Search for your item...");
 		searchLabel.setFont( new Font( "serif", Font.BOLD, 16 ) );
 		searchLabel.setBounds( 50, topItem, 300, 25);
 
@@ -324,8 +359,8 @@ public class CustomerPanel extends JPanel
 		singerField = new JTextField();
 		singerField.setBounds(70 + xSpacing*2, topItem + textFieldSpacing + labelSpacing, 75, 18);
 
-		//Make Purchase
-		JLabel purchaseLabel = new JLabel("Make Purchase");
+		//Add Item to cart
+		JLabel purchaseLabel = new JLabel("Add item to cart");
 		purchaseLabel.setFont( new Font( "serif", Font.BOLD, 16 ) );
 		purchaseLabel.setBounds(50, topItem + textFieldSpacing*3, 150, 20);
 
@@ -344,8 +379,8 @@ public class CustomerPanel extends JPanel
 
 		qtyField = new JTextField();
 		qtyField.setBounds(70 + xSpacing, topItem + textFieldSpacing*4 + labelSpacing, 75, 18);
-		
-		
+
+
 
 
 
@@ -354,7 +389,6 @@ public class CustomerPanel extends JPanel
 		searchButton.addActionListener( new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				Order order = new Order();
 
 				String category = customerPanel.categoryField.getText();
 				String title = customerPanel.titleField.getText();
@@ -374,17 +408,17 @@ public class CustomerPanel extends JPanel
 
 			}
 		});
-		
+
 		searchButton.setText( "Search" );
 		searchButton.setBounds( 350, topItem, 80, 30 );
-		
+
 		searchTitle = new JLabel();
 		purchaseItemPanel.add(searchTitle);
-		
+
 		searchTablePanel = new JLabel();
 		purchaseItemPanel.add(searchTablePanel);
 		searchTablePanel.setLayout( new BorderLayout());
-		
+
 
 
 
@@ -396,8 +430,6 @@ public class CustomerPanel extends JPanel
 
 			public void actionPerformed(ActionEvent e) 
 			{
-				Order order = new Order();
-				Item item = new Item();
 
 				String upcText = customerPanel.upcField.getText();
 				int upc = (upcText.equals("") || upcText.matches("^\\s*$")) ? 0 :Integer.parseInt(upcText);
@@ -440,7 +472,7 @@ public class CustomerPanel extends JPanel
 						JOptionPane.showMessageDialog(null, "Successfully added to cart");
 					}
 
-				} //else // TODO, figure out how to display the list on GUI
+				}
 
 
 			}
@@ -449,28 +481,73 @@ public class CustomerPanel extends JPanel
 		addCartButton.setText( "Add to Cart" );
 		addCartButton.setBounds( 325, topItem + textFieldSpacing*3, 125, 30 );
 
-
-		// TODO: maybe add remove from shopping cart? 
-		
-		
+		// My cart button
 		JButton cartButton = new JButton();
 		cartButton.addActionListener( new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				Order order = new Order();
+
 				Map<Integer, Integer> shopCart = order.getCart();
-				JOptionPane.showMessageDialog(customerPanel, 
-						"hi" + "\n" +"hi" + "\n" +"hi" + "\n" +"hi" + "\n" +"hi" + "\n" ,
-						"My Shopping Cart",
-						JOptionPane.PLAIN_MESSAGE);
-				
+				if (shopCart.isEmpty()) {
+					JOptionPane.showMessageDialog(customerPanel, 
+							"The Cart is Empty", "My Shopping Cart",
+							JOptionPane.PLAIN_MESSAGE);
+
+				}
+				else {
+					StringBuilder stringBuilder = new StringBuilder();
+					System.out.println(shopCart.keySet());
+					System.out.println(shopCart.values());
+
+					for (Entry<Integer, Integer> entry : shopCart.entrySet()) {
+						Integer key = entry.getKey();
+						Integer value = entry.getValue();
+
+						String title = item.getTitle(key);
+
+						stringBuilder.append("UPC: "+ key.toString() + ", ");
+						stringBuilder.append("Title: " + title + ", ");
+						stringBuilder.append("Quantity: " + value.toString() + ", ");
+
+						stringBuilder.append("\n");
+					}
+					String finalString = stringBuilder.toString();
+					System.out.println(finalString+"this is final string");
+					JOptionPane.showMessageDialog(customerPanel, 
+							finalString, "My Shopping Cart",
+							JOptionPane.PLAIN_MESSAGE);
+				}
 			}
-			
 		});
-		
+
 		cartButton.setText("My Cart");
 		cartButton.setBounds(950, 15, 100, 16);
+
+		// CheckOut button
+		JButton checkOutButton = new JButton();
+		checkOutButton.addActionListener( new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				myCart = order.getCart();
+				if (myCart.isEmpty()) {
+					JOptionPane.showMessageDialog(customerPanel, 
+							"The Cart is Empty, Cannot proceed to check out", "Error",
+							JOptionPane.ERROR_MESSAGE);
+
+				}
+				else {
+					purchaseItemPanel.setVisible( false );
+					initializeCheckOutPanel();
+					checkOutPanel.setVisible( true );
+				}
+
+
+			}
+
+		});
+
+		checkOutButton.setText("Checkout");
+		checkOutButton.setBounds(950, 50, 100, 16);
 
 		// Logout button
 		JButton logoutButton = new JButton();
@@ -478,13 +555,30 @@ public class CustomerPanel extends JPanel
 
 			public void actionPerformed(ActionEvent e) 
 			{
+				Map<Integer, Integer> shopCart = order.getCart();
+				if(!shopCart.isEmpty()){
+					for (Entry<Integer, Integer> entry : shopCart.entrySet()) {
+						Integer key = entry.getKey();
+						Integer value = entry.getValue();
+
+						item.updateStock(key, value, "+");
+					}
+
+				}
+				
+				JOptionPane.showMessageDialog(customerPanel, 
+						"You have successfully logged out, your cart has been emptied", "",
+						JOptionPane.PLAIN_MESSAGE);
 				// Logout and return to login page.
-				// TODO: clear any fields that are specific to the logged in user
 				customerName = "";
 				customerId = "";
+				order = new Order();
+				item = new Item();
+				myCart = new HashMap<Integer, Integer>();
 				purchaseItemPanel.setVisible( false );
 				initializeLoginPanel();		
 				loginPanel.setVisible( true );
+
 			}
 
 		});
@@ -519,12 +613,237 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel.add( logoutButton );
 		// Add Display Cart button
 		purchaseItemPanel.add(cartButton);
-		
+		// Add CheckOut button
+		purchaseItemPanel.add(checkOutButton);
 
-		// Set size for login page
+
+		// Set size for PurchaseItem page
 		purchaseItemPanel.setBounds( 0, 0, MainInterface.WIDTH, MainInterface.HEIGHT );
 	}
-	
+
+	private void initializeCheckOutPanel(){
+
+		int textFieldSpacing = 30;
+		int xSpacing = 200;
+
+		checkOutPanel = new JPanel();
+		checkOutPanel.setLayout( null );
+		checkOutPanel.setVisible( false );
+		final CustomerPanel customerPanel = this;
+		displayBill();
+
+		// Heading Text
+		JLabel checkOut = new JLabel( "Checkout Page" );
+		checkOut.setFont( new Font( "serif", Font.BOLD, 24 ) );
+		checkOut.setBounds( 25, 25, 800, 40 );
+
+		JLabel welcome2 = new JLabel( "You are currently logged in as: User Id: " + customerId + ", Name: " + customerName );
+		welcome2.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		welcome2.setBounds( 45, 65 , 400, 20 );	
+
+		JLabel cardNumLabel = new JLabel ("Credit Card Number");
+		cardNumLabel.setFont(new Font( "serif", Font.PLAIN, 14 ) );
+		cardNumLabel.setBounds(60, 100, 200, 20);
+
+		cardNumField = new JTextField();
+		cardNumField.setBounds(60, 100+textFieldSpacing, 150, 18);
+
+		JLabel expiredDateLabel = new JLabel("Expiry Date");
+		expiredDateLabel.setFont(new Font( "serif", Font.PLAIN, 14 ) );
+		expiredDateLabel.setBounds(60+xSpacing, 100, 200, 20);
+
+		// Create element for entering the year
+		List<Integer> yearList = new ArrayList<Integer>();
+		int currentYear = LocalDate.now().getYear();
+		for ( int i = 0; i < 11; i++ )
+		{
+			yearList.add( currentYear + 10 - i );
+		}
+		final Object[] yearArray = yearList.toArray();
+
+		final JComboBox expiredYearDropdown = new JComboBox();
+
+		for (int i = 0; i < yearArray.length; i++)
+		{
+			expiredYearDropdown.addItem( (Integer)yearArray[i] );
+		}
+		expiredYearDropdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				expiredDateYear = (Integer)expiredYearDropdown.getSelectedItem();
+			}
+		});
+		expiredDateYear = currentYear;
+
+		checkOutPanel.add(expiredYearDropdown);
+		expiredYearDropdown.setBounds( 60+xSpacing, 100+textFieldSpacing, 85, 20 );
+		expiredYearDropdown.setMaximumRowCount(12);
+
+		// ==========================================================================
+
+		// Create element for entering the month
+		List<Integer> monthList = new ArrayList<Integer>();
+		for ( int i = 0; i < 12; i++ )
+		{
+			monthList.add( i + 1 );
+		}
+		final Object[] monthArray = monthList.toArray();
+
+		final JComboBox expiredMonthDropdown = new JComboBox();
+
+		for (int i = 0; i < monthArray.length; i++)
+		{
+			expiredMonthDropdown.addItem( (Integer)monthArray[i] );
+		}
+		expiredMonthDropdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				expiredDateMonth = (Integer)expiredMonthDropdown.getSelectedItem();
+			}
+		});
+		expiredDateMonth = 1;
+
+		checkOutPanel.add(expiredMonthDropdown);
+		expiredMonthDropdown.setBounds( 60+xSpacing+100, 100+textFieldSpacing, 60, 20 );
+		expiredMonthDropdown.setMaximumRowCount(12);
+
+		// ==========================================================================
+
+		// Create element for entering the day
+		List<Integer> dayList = new ArrayList<Integer>();
+		for ( int i = 0; i < 31; i++ )
+		{
+			dayList.add( i + 1 );
+		}
+		final Object[] dayArray = dayList.toArray();
+
+		final JComboBox expiredDayDropdown = new JComboBox();
+
+		for (int i = 0; i < dayArray.length; i++)
+		{
+			expiredDayDropdown.addItem( (Integer)dayArray[i] );
+		}
+		expiredDayDropdown.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				expiredDateDay = (Integer)expiredDayDropdown.getSelectedItem();
+			}
+		});
+		expiredDateDay = 1;
+
+		checkOutPanel.add(expiredDayDropdown);
+		expiredDayDropdown.setBounds( 60+xSpacing+175, 100+textFieldSpacing, 60, 20 );
+		expiredDayDropdown.setMaximumRowCount(12);
+
+
+		// Confirm Button
+		JButton confirmButton = new JButton();
+		confirmButton.addActionListener(new ActionListener() {
+
+
+			public void actionPerformed(ActionEvent e) {
+				String cardNum = cardNumField.getText();
+
+				String year = String.valueOf( expiredDateYear );
+				String month = String.valueOf( expiredDateMonth );
+				String date = String.valueOf( expiredDateDay );
+				String dateString = year + "-" + month + "-" + date;
+				System.out.println(dateString);
+
+				Date sqlDate = Date.valueOf( dateString );
+				int temp = order.outstandingOrder();
+				int numofDays = order.calcDate(temp);
+
+				order.checkOut(cardNum, sqlDate);
+
+				JOptionPane.showMessageDialog(customerPanel, 
+						"Checkout completed", "Success",
+						JOptionPane.PLAIN_MESSAGE);
+
+				JOptionPane.showMessageDialog(customerPanel, 
+						"Your item will be delievered in" + numofDays, "Success",
+						JOptionPane.PLAIN_MESSAGE);
+
+				order = new Order();
+				item = new Item();
+				myCart = new HashMap<Integer, Integer>();
+				checkOutPanel.setVisible( false );
+
+				initializePurchaseItemPanel();		
+				purchaseItemPanel.setVisible( true );
+
+			}
+
+		});
+
+		confirmButton.setText("Confirm");
+		confirmButton.setBounds(60+xSpacing+225, 100, 85, 16);
+
+
+		// Logout button
+		JButton logoutButton = new JButton();
+		logoutButton.addActionListener( new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) 
+			{
+				Map<Integer, Integer> shopCart = order.getCart();
+				if(!shopCart.isEmpty()){
+					for (Entry<Integer, Integer> entry : shopCart.entrySet()) {
+						Integer key = entry.getKey();
+						Integer value = entry.getValue();
+
+						item.updateStock(key, value, "+");
+					}
+
+				}
+				JOptionPane.showMessageDialog(customerPanel, 
+						"You have successfully logged out, your cart has been emptied", "",
+						JOptionPane.PLAIN_MESSAGE);
+				// Logout and return to login page.
+				// TODO: clear any fields that are specific to the logged in user
+				customerName = "";
+				customerId = "";
+				order = new Order();
+				item = new Item();
+				myCart = new HashMap<Integer, Integer>();
+				checkOutPanel.setVisible( false );
+
+				initializeLoginPanel();		
+				loginPanel.setVisible( true );
+			}
+
+		});
+
+		logoutButton.setText( "Logout" );
+		logoutButton.setBounds( 1080, 15, 85, 16 );
+
+		// Add item purchasing page to CustomerPanel
+		this.add( checkOutPanel );
+		// Add header text
+		checkOutPanel.add( checkOut );
+		checkOutPanel.add( welcome2 );
+
+		// Add Credit Card Label&Field
+		checkOutPanel.add(cardNumLabel);
+		checkOutPanel.add(cardNumField);
+
+		// Add Expiry Date Label&Field
+		checkOutPanel.add(expiredDateLabel);
+
+		// Add billInfo
+		checkOutPanel.add(billInfoLabel);
+
+		// Add confirm button
+		checkOutPanel.add(confirmButton);
+
+		// Add logout button
+		checkOutPanel.add(logoutButton);
+
+
+		// Set size for CheckOut page
+		checkOutPanel.setBounds( 0, 0, MainInterface.WIDTH, MainInterface.HEIGHT );
+
+
+
+	}
+
 	private void displaySearchTable() {
 		searchTable = new JTable(searchTableInfo.getData(), searchTableInfo.getHeaders());
 		searchTablePanel.removeAll();
@@ -533,19 +852,59 @@ public class CustomerPanel extends JPanel
 		System.out.println( searchTableInfo.getData().length);
 		searchTablePanel.setBounds( 5, 280, 1000, 16*searchTableInfo.getData().length + 18 );
 		// TODO: Change size of the panel so scrolling will happen
-		this.setPreferredSize( new Dimension ( 1000, 5000) );
-		purchaseItemPanel.setPreferredSize( new Dimension( 1000, 5000));
+		this.setPreferredSize( new Dimension ( 1000, 3000) );
+		purchaseItemPanel.setPreferredSize( new Dimension( 1000, 3000));
 		// TODO: need to change the preferred size back to normal when logging out
 		searchTablePanel.revalidate();
 		searchTablePanel.repaint();
-
-		/*if ( searchTitle != null )
-	{
-		dailyReportPanel.remove( reportTitle );
 	}
-	reportTitle = new JLabel( "Report:" );
-	reportTitle.setFont( new Font( "serif", Font.BOLD, 14 ) );
-	dailyReportPanel.add( reportTitle );
-	reportTitle.setBounds( 100, 120 + 16*dailyReportTotalsInfo.getData().length + 18, 200, 20 );*/
+
+	private void displayBill() {
+
+		// to keep track of the total Price
+		Double totalPrice = 0.0;
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("<html>");
+
+		stringBuilder.append("<table border=\"0\" style=\"background-color:transparent;border-collapse:collapse;border:0px solid FFCC00;color:000000;width:100%\" cellpadding=\"3\" cellspacing=\"3\">");
+		stringBuilder.append("<tr>");
+		stringBuilder.append("<td>UPC</td>");
+		stringBuilder.append("<td>Title</td>");
+		stringBuilder.append("<td>Quantity</td>");
+		stringBuilder.append("<td>Unit Price</td>");
+		stringBuilder.append("</tr>");
+
+		for (Entry<Integer, Integer> entry : myCart.entrySet()) {
+			Integer key = entry.getKey();
+			Integer value = entry.getValue();
+
+			String title = item.getTitle(key);
+			Double unitPrice = item.getPrice(key);
+			totalPrice += unitPrice * value;
+
+			stringBuilder.append("<tr>");
+			stringBuilder.append("<td>" +key.toString() + "</td>");
+			stringBuilder.append("<td>" +title + "</td>");
+			stringBuilder.append("<td>" +value.toString() + "</td>");
+			stringBuilder.append("<td>" +unitPrice.toString() + "</td>");
+			stringBuilder.append("</tr>");
+		}
+		stringBuilder.append("<tr>");
+		stringBuilder.append("<td> Total Price: " +totalPrice + "</td>");
+		stringBuilder.append("</tr>");
+		stringBuilder.append("</table>");
+		stringBuilder.append("</html>");
+		String finalString = stringBuilder.toString();
+
+		billInfoLabel = new JLabel(finalString);
+		billInfoLabel.setFont( new Font( "serif", Font.PLAIN, 18 ));
+		billInfoLabel.setBounds(50, 180, 1000, 800);
+		billInfoLabel.setVerticalTextPosition(JLabel.BOTTOM);
+		billInfoLabel.setVerticalAlignment(JLabel.TOP);
+		checkOutPanel.setAlignmentY(TOP_ALIGNMENT);
+		billInfoLabel.setBorder(BorderFactory.createEmptyBorder( -3 /*top*/, 0, 0, 0 ));
+
+
 	}
 }

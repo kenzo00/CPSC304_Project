@@ -125,7 +125,6 @@ public class Order {
 			else
 				shopCart.put(upc, qty);
 			i.updateStock(upc, qty, "-");
-			return;
 
 		}
 		else {
@@ -137,10 +136,11 @@ public class Order {
 				shopCart.put(upc, newQty);
 			i.updateStock(upc, newQty, "-");
 		}
-		System.out.println(enoughStock);
-		System.out.println(upc);
+		//System.out.println(enoughStock);
+		//System.out.println(upc);
 		System.out.println(shopCart.keySet());
 		System.out.println(shopCart.values());
+		System.out.println("========");
 	}
 
 
@@ -225,7 +225,7 @@ public class Order {
 
 	
 	// get the Cart
-	public Map getCart() {
+	public Map<Integer, Integer> getCart() {
 		return this.shopCart;
 	}
 	
@@ -263,7 +263,7 @@ public class Order {
 	}
 
 	// Calculate the expectedDate
-	private void calcDate(int num) {
+	public int calcDate(int num) {
 
 		LocalDate currentDate = LocalDate.now();
 		int numDays = (int) Math.ceil(num/maxOrder);
@@ -272,10 +272,12 @@ public class Order {
 
 		this.date = Date.valueOf(currentDate);
 		this.expectedDate = Date.valueOf(calculatedDate);
+		
+		return numDays;
 	}
 
 	// Get the number of outstanding order
-	private int outstandingOrder() {
+	public int outstandingOrder() {
 
 		int outstandingNum = 0;
 		String query = "Select COUNT(*) from cpsc304.`Order` where deliveredDate is NULL";
