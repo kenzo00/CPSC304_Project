@@ -465,7 +465,7 @@ public class CustomerPanel extends JPanel
 					}
 					int stock = order.checkStock(upc, qty);
 					if (qty > stock) {
-						int dialogResult = JOptionPane.showConfirmDialog(null, "Sorry, but there are only "+ stock +" left in stock. Do you want to purchase all of them?");
+						int dialogResult = JOptionPane.showConfirmDialog(null, "Sorry, but there are only "+ stock +" left in stock. Do you want to purchase all of them?", null, JOptionPane.YES_NO_OPTION);
 						if (dialogResult == JOptionPane.YES_OPTION) {
 							order.purchaseItem(upc, stock);
 							JOptionPane.showMessageDialog(null, "Successfully added to cart");
@@ -762,6 +762,8 @@ public class CustomerPanel extends JPanel
 				System.out.println(dateString);
 
 				Date sqlDate = Date.valueOf( dateString );
+				
+				System.out.println(sqlDate.toString()+"this is the expiry date");
 				int temp = order.outstandingOrder();
 				int numofDays = order.calcDate(temp);
 
@@ -773,10 +775,10 @@ public class CustomerPanel extends JPanel
 						JOptionPane.PLAIN_MESSAGE);
 
 				JOptionPane.showMessageDialog(customerPanel, 
-						"Your item will be delievered in " + numofDays + " days", "Success",
+						"Your item will be delievered in " + numofDays + " day(s)", "Success",
 						JOptionPane.PLAIN_MESSAGE);
 
-				int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to make more purchases?");
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to make more purchases?", null, JOptionPane.YES_NO_OPTION);
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					order = new Order();
 					item = new Item();
@@ -908,6 +910,7 @@ public class CustomerPanel extends JPanel
 			String title = item.getTitle(key);
 			Double unitPrice = item.getPrice(key);
 			totalPrice += unitPrice * value;
+			totalPrice = (double) Math.round(totalPrice * 100) / 100;
 
 			stringBuilder.append("<tr>");
 			stringBuilder.append("<td>" +key.toString() + "</td>");

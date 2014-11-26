@@ -220,11 +220,16 @@ public class Order {
 
 		LocalDate currentDate = LocalDate.now();
 		int numDays = (int) Math.ceil(num/maxOrder);
+		
+		if (numDays == 0){
+			numDays = 1;
+		}
 
 		LocalDate calculatedDate = currentDate.plusDays(numDays);
 
 		this.date = Date.valueOf(currentDate);
 		this.expectedDate = Date.valueOf(calculatedDate);
+		
 
 		return numDays;
 	}
