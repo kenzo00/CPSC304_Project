@@ -165,7 +165,7 @@ public class ClerkPanel extends JPanel {
 							System.out.println("false isvalid");
 						}
 
-						if ((transaction.isCorrectUpc(rec, uNumber)) == false) {
+						else if ((transaction.isCorrectUpc(rec, uNumber)) == false) {
 							JOptionPane.showMessageDialog( clerkPanel,
 									"No matching item. Please check receipt.",
 									"Update error",
@@ -173,7 +173,7 @@ public class ClerkPanel extends JPanel {
 							System.out.println("false is correctupc");
 						}
 
-						if ((transaction.newRefund(rec, uNumber)) == false) {
+						else if ((transaction.newRefund(rec, uNumber)) == false) {
 							JOptionPane.showMessageDialog( clerkPanel,
 									"Refund has already been processed. Cannot refund.",
 									"Update error",
