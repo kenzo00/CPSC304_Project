@@ -253,6 +253,7 @@ public class CustomerPanel extends JPanel
 				else if ( order.registerCustomer(cid, password, name, address, phone) )
 				{
 					// Registration is successful. Login the user and continue to shopping page.
+					cidUser = cid;
 					customerName = name;
 					customerId = userId;
 					loginPanel.setVisible( false );
@@ -763,8 +764,9 @@ public class CustomerPanel extends JPanel
 				Date sqlDate = Date.valueOf( dateString );
 				int temp = order.outstandingOrder();
 				int numofDays = order.calcDate(temp);
-
-				order.checkOut(cardNum, sqlDate);
+				
+				System.out.println(cidUser);
+				order.checkOut(cardNum, sqlDate, cidUser);
 
 				JOptionPane.showMessageDialog(customerPanel, 
 						"Checkout completed", "Success",

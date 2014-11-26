@@ -41,7 +41,7 @@ public class Order {
 		//UI - get Item name info TODO
 		searchItem(blankString, blankString, "Jay Chou");
 
-		checkOut(fakeCard, fakeDate);
+		checkOut(fakeCard, fakeDate, cid);
 
 	}
 
@@ -158,7 +158,7 @@ public class Order {
 	}
 
 
-	public void checkOut(String cardNum, Date expiryDate){
+	public void checkOut(String cardNum, Date expiryDate, int cid){
 		this.cardNum = cardNum;
 		this.expiryDate = expiryDate;
 		generateId();
@@ -169,7 +169,7 @@ public class Order {
 		// Build the sql query
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( "(" ).append( this.receiptId ).append( ",\"" ).append( this.date ).append( "\"," );
-		stringBuilder.append( this.cid ).append( ",\"" ).append( this.cardNum ).append( "\",\"" ).append( this.expiryDate ).append( "\",\"" );
+		stringBuilder.append( cid ).append( ",\"" ).append( this.cardNum ).append( "\",\"" ).append( this.expiryDate ).append( "\",\"" );
 		stringBuilder.append( this.expectedDate ).append( "\"," ).append( "NULL" );
 
 		String values = stringBuilder.append( ")" ).toString();
