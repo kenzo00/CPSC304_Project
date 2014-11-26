@@ -94,7 +94,7 @@ public class Customer
 	{
 		String name = "";
 		
-		String query = "SELECT name FROM Customer WHERE cid=" + cid;
+		String query = "SELECT name FROM cpsc304.Customer WHERE cid=" + cid;
 		
 		try 
 		{

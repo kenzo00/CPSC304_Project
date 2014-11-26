@@ -266,7 +266,7 @@ public class Item {
 	{
 		int upc = 0;
 		
-		String query = "SELECT MAX(upc) FROM Item";
+		String query = "SELECT MAX(upc) FROM cpsc304.Item";
 		
 		try 
 		{
