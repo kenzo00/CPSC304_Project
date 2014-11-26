@@ -747,6 +747,11 @@ public class CustomerPanel extends JPanel
 
 			public void actionPerformed(ActionEvent e) {
 				String cardNum = cardNumField.getText();
+				if (cardNum.isEmpty()){
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Credit Card Number cannot be blank", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 
 				String year = String.valueOf( expiredDateYear );
 				String month = String.valueOf( expiredDateMonth );
