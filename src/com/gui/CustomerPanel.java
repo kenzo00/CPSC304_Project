@@ -771,17 +771,29 @@ public class CustomerPanel extends JPanel
 						JOptionPane.PLAIN_MESSAGE);
 
 				JOptionPane.showMessageDialog(customerPanel, 
-						"Your item will be delievered in" + numofDays, "Success",
+						"Your item will be delievered in " + numofDays + " days", "Success",
 						JOptionPane.PLAIN_MESSAGE);
-
-				order = new Order();
-				item = new Item();
-				myCart = new HashMap<Integer, Integer>();
-				checkOutPanel.setVisible( false );
-
-				initializePurchaseItemPanel();		
-				purchaseItemPanel.setVisible( true );
-
+				
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to make more purchases?");
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					order = new Order();
+					item = new Item();
+					myCart = new HashMap<Integer, Integer>();
+					checkOutPanel.setVisible( false );
+					initializePurchaseItemPanel();		
+					purchaseItemPanel.setVisible( true );
+					
+					
+				}
+				else if (dialogResult == JOptionPane.NO_OPTION){
+					order = new Order();
+					item = new Item();
+					myCart = new HashMap<Integer, Integer>();
+					checkOutPanel.setVisible( false );
+					initializeLoginPanel();		
+					loginPanel.setVisible( true );
+				}
+					
 			}
 
 		});
