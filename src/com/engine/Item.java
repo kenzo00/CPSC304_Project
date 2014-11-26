@@ -349,4 +349,72 @@ public class Item {
 		return price;
 	}
 
+	public TableInfo getRefundItem(int ReceiptID, int upc, int quantity) {
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append( " SELECT i.upc AS `UPC`, p.receiptId AS `Receipt`, i.type AS `Type`, i.category AS `Category`, i.company AS `Company`, i.year AS `Year`, i.price AS `Price`, i.stock AS `Stock` ");
+		stringBuilder.append( " FROM Item i, `Order` o, PurchaseItem p ");
+		stringBuilder.append( " WHERE p.receiptId= ").append(ReceiptID);
+		stringBuilder.append( " AND i.upc= ").append(upc);
+		stringBuilder.append( " GROUP BY p.receiptId, p.upc, p.quantity");
+						
+		String query = stringBuilder.toString();
+		System.out.println( query );
+		TableInfo tableInfo = new TableInfo();
+		
+		try {
+			PreparedStatement ps = Engine.getInstance().getConnection().prepareStatement( query );
+			ResultSet result = ps.executeQuery();
+
+			ResultSetMetaData resultMetadata = result.getMetaData();
+			int numCol = resultMetadata.getColumnCount();
+			
+			// Put the Column names into an array
+						List<String> headerList = new ArrayList<String>();
+						for ( int i = 0; i < numCol; i++ )
+						{
+							headerList.add( resultMetadata.getColumnName( i+1 ) );
+						}
+						String[] headerArray = headerList.toArray( new String[ headerList.size() ] );
+
+						// Put the data into an array
+						List< List<String> > dataList = new ArrayList< List<String> >();
+						while ( result.next() )
+						{
+							List<String> dataRow = new ArrayList<String>();
+
+							for ( int i = 0; i < numCol; i++ )
+							{
+								dataRow.add( result.getString( i+1 ) );
+							}
+
+							dataList.add( dataRow );
+						}
+						String[][] dataArray = new String[ dataList.size() ][ headerList.size() ];
+						for ( int i = 0; i < dataList.size(); i++ )
+						{
+							List<String> dataRow = dataList.get( i );
+							for ( int j = 0; j < headerList.size(); j++ )
+							{
+								dataArray[i][j] = dataRow.get( j );
+							}
+						}
+
+						tableInfo = new TableInfo( headerArray, dataArray );
+
+						ps.close();
+
+					} 
+					catch (SQLException e) 
+					{
+						e.printStackTrace();
+						System.out.println("Failed to execute select statement:\n" + query + "\nError Message: " + e.getMessage());
+					}
+	
+			
+		
+		
+		return tableInfo;
+	}
+
 }
