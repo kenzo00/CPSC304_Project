@@ -139,7 +139,7 @@ public class ManagerPanel extends JPanel
 		});
 		topSalesMonth = 1;
 		topSalesPanel.add(topSalesMonthDropdown);
-		topSalesMonthDropdown.setBounds( 195, rowHeight, 60, 20 );
+		topSalesMonthDropdown.setBounds( 195, rowHeight, 70, 20 );
 		topSalesMonthDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		// Create element for entering the day
@@ -161,7 +161,7 @@ public class ManagerPanel extends JPanel
 		});
 		topSalesDay = 1;
 		topSalesPanel.add(topSalesDayDropdown);
-		topSalesDayDropdown.setBounds( 265, rowHeight, 60, 20 );
+		topSalesDayDropdown.setBounds( 265, rowHeight, 70, 20 );
 		topSalesDayDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		// Create element for entering the number of elements
@@ -177,7 +177,7 @@ public class ManagerPanel extends JPanel
 		});
 		topSalesNumberElements = 1;
 		topSalesPanel.add(topSalesNumberDropdown);
-		topSalesNumberDropdown.setBounds( 345, rowHeight, 60, 20 );
+		topSalesNumberDropdown.setBounds( 345, rowHeight, 70, 20 );
 		topSalesNumberDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		final ManagerPanel managerPanel = this;
@@ -268,7 +268,7 @@ public class ManagerPanel extends JPanel
 		});
 		dailyReportMonth = 1;
 		dailyReportPanel.add(dailyReportMonthDropdown);
-		dailyReportMonthDropdown.setBounds( 195, rowHeight, 60, 20 );
+		dailyReportMonthDropdown.setBounds( 195, rowHeight, 70, 20 );
 		dailyReportMonthDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		// Create element for entering the day
@@ -290,7 +290,7 @@ public class ManagerPanel extends JPanel
 		});
 		dailyReportDay = 1;
 		dailyReportPanel.add(dailyReportDayDropdown);
-		dailyReportDayDropdown.setBounds( 265, rowHeight, 60, 20 );
+		dailyReportDayDropdown.setBounds( 265, rowHeight, 70, 20 );
 		dailyReportDayDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		JLabel dateLabel = new JLabel( "Enter the date:" );
@@ -410,7 +410,7 @@ public class ManagerPanel extends JPanel
 		});
 		deliveryMonth = 1;
 		itemOrderPanel.add(deliveryMonthDropdown);
-		deliveryMonthDropdown.setBounds( 100 + 85 + 10, rowHeightOrder, 60, dropdownHeight );
+		deliveryMonthDropdown.setBounds( 100 + 85 + 10, rowHeightOrder, 70, dropdownHeight );
 		deliveryMonthDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		// Create element for entering the day
@@ -432,7 +432,7 @@ public class ManagerPanel extends JPanel
 		});
 		deliveryDay = 1;
 		itemOrderPanel.add(deliveryDayDropdown);
-		deliveryDayDropdown.setBounds( 100 + 95 + 70, rowHeightOrder, 60, dropdownHeight );
+		deliveryDayDropdown.setBounds( 100 + 95 + 70, rowHeightOrder, 70, dropdownHeight );
 		deliveryDayDropdown.setMaximumRowCount(12);
 		// ==========================================================================
 		JLabel dateLabel = new JLabel( "Enter the date:" );
