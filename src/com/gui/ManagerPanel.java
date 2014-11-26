@@ -305,7 +305,7 @@ public class ManagerPanel extends JPanel
 		dailyReportYear = currentYear;
 
 		dailyReportPanel.add(dailyReportYearDropdown);
-		dailyReportYearDropdown.setBounds( 100, rowHeight, 60, 18 );
+		dailyReportYearDropdown.setBounds( 100, rowHeight, 85, 20 );
 		dailyReportYearDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -332,7 +332,7 @@ public class ManagerPanel extends JPanel
 		dailyReportMonth = 1;
 
 		dailyReportPanel.add(dailyReportMonthDropdown);
-		dailyReportMonthDropdown.setBounds( 170, rowHeight, 70, 20 );
+		dailyReportMonthDropdown.setBounds( 195, rowHeight, 60, 20 );
 		dailyReportMonthDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -359,7 +359,7 @@ public class ManagerPanel extends JPanel
 		dailyReportDay = 1;
 
 		dailyReportPanel.add(dailyReportDayDropdown);
-		dailyReportDayDropdown.setBounds( 230, rowHeight, 70, 20 );
+		dailyReportDayDropdown.setBounds( 265, rowHeight, 60, 20 );
 		dailyReportDayDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -396,7 +396,7 @@ public class ManagerPanel extends JPanel
 
 		dailyReportPanel.add(generateDailyReportButton);
 		generateDailyReportButton.setText( "Generate Table" );
-		generateDailyReportButton.setBounds( 320, rowHeight, 120, 18 );
+		generateDailyReportButton.setBounds( 350, rowHeight, 120, 20 );
 
 		dailyReportTablePanel = new JLabel();
 		dailyReportPanel.add( dailyReportTablePanel );
@@ -453,7 +453,6 @@ public class ManagerPanel extends JPanel
 
 		int rowHeightOrder = 80;
 		int dropdownHeight = 20;
-		int dropdownWidth = 85;
 
 		// ==========================================================================
 
@@ -480,7 +479,7 @@ public class ManagerPanel extends JPanel
 		deliveryYear = currentYear;
 
 		itemOrderPanel.add(deliverYearDropdown);
-		deliverYearDropdown.setBounds( 100, rowHeightOrder, dropdownWidth, dropdownHeight );
+		deliverYearDropdown.setBounds( 100, rowHeightOrder, 85, dropdownHeight );
 		deliverYearDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -507,7 +506,7 @@ public class ManagerPanel extends JPanel
 		deliveryMonth = 1;
 
 		itemOrderPanel.add(deliveryMonthDropdown);
-		deliveryMonthDropdown.setBounds( 100 + dropdownWidth + 10, rowHeightOrder, dropdownWidth/2, dropdownHeight );
+		deliveryMonthDropdown.setBounds( 100 + 85 + 10, rowHeightOrder, 60, dropdownHeight );
 		deliveryMonthDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -534,7 +533,7 @@ public class ManagerPanel extends JPanel
 		deliveryDay = 1;
 
 		itemOrderPanel.add(deliveryDayDropdown);
-		deliveryDayDropdown.setBounds( 100 + dropdownWidth + dropdownWidth/2 + 2*10, rowHeightOrder, dropdownWidth/2, dropdownHeight );
+		deliveryDayDropdown.setBounds( 100 + 95 + 70, rowHeightOrder, 60, dropdownHeight );
 		deliveryDayDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -549,7 +548,7 @@ public class ManagerPanel extends JPanel
 		
 		// Process order delivery
 		final JTextField receiptIdInput = new JTextField();
-		receiptIdInput.setBounds( 320, rowHeightOrder, 100, 20 );
+		receiptIdInput.setBounds( 350, rowHeightOrder, 100, 20 );
 
 		JButton setDeliveryDateButton = new JButton();
 		setDeliveryDateButton.addActionListener( new ActionListener() {
@@ -577,11 +576,11 @@ public class ManagerPanel extends JPanel
 		JLabel receiptIdLabel = new JLabel( "Enter the receipt Id:" );
 		receiptIdLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
 		itemOrderPanel.add( receiptIdLabel );
-		receiptIdLabel.setBounds( 320, rowHeightOrder - 25, 200, 20 );
+		receiptIdLabel.setBounds( 350, rowHeightOrder - 25, 200, 20 );
 
 		itemOrderPanel.add(setDeliveryDateButton);
 		setDeliveryDateButton.setText( "Deliver Order" );
-		setDeliveryDateButton.setBounds( 470, rowHeightOrder, 120, 18 );
+		setDeliveryDateButton.setBounds( 500, rowHeightOrder, 120, 18 );
 		
 		// Heading Text
 		JLabel orderProcessLabel = new JLabel( "Order Processing" );
