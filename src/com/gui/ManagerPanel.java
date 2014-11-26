@@ -142,7 +142,7 @@ public class ManagerPanel extends JPanel
 		topSalesYear = currentYear;
 
 		topSalesPanel.add(topSalesYearDropdown);
-		topSalesYearDropdown.setBounds( 100, rowHeight, 60, 18 );
+		topSalesYearDropdown.setBounds( 100, rowHeight, 85, 20 );
 		topSalesYearDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -169,7 +169,7 @@ public class ManagerPanel extends JPanel
 		topSalesMonth = 1;
 
 		topSalesPanel.add(topSalesMonthDropdown);
-		topSalesMonthDropdown.setBounds( 170, rowHeight, 50, 18 );
+		topSalesMonthDropdown.setBounds( 195, rowHeight, 60, 20 );
 		topSalesMonthDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -196,7 +196,7 @@ public class ManagerPanel extends JPanel
 		topSalesDay = 1;
 
 		topSalesPanel.add(topSalesDayDropdown);
-		topSalesDayDropdown.setBounds( 230, rowHeight, 50, 18 );
+		topSalesDayDropdown.setBounds( 265, rowHeight, 60, 20 );
 		topSalesDayDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -217,7 +217,7 @@ public class ManagerPanel extends JPanel
 		topSalesNumberElements = 1;
 
 		topSalesPanel.add(topSalesNumberDropdown);
-		topSalesNumberDropdown.setBounds( 300, rowHeight, 50, 18 );
+		topSalesNumberDropdown.setBounds( 345, rowHeight, 60, 20 );
 		topSalesNumberDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -252,11 +252,11 @@ public class ManagerPanel extends JPanel
 		JLabel numberLabel = new JLabel( "Number of records:" );
 		numberLabel.setFont( new Font( "serif", Font.BOLD, 14 ) );
 		topSalesPanel.add( numberLabel );
-		numberLabel.setBounds( 300, rowHeight - 25, 200, 20 );
+		numberLabel.setBounds( 345, rowHeight - 25, 200, 20 );
 
 		topSalesPanel.add(generateTopSalesButton);
 		generateTopSalesButton.setText( "Generate Table" );
-		generateTopSalesButton.setBounds( 450, rowHeight, 120, 18 );
+		generateTopSalesButton.setBounds( 500, rowHeight, 120, 20 );
 
 		topSalesTablePanel = new JLabel();
 		topSalesPanel.add( topSalesTablePanel );
@@ -332,7 +332,7 @@ public class ManagerPanel extends JPanel
 		dailyReportMonth = 1;
 
 		dailyReportPanel.add(dailyReportMonthDropdown);
-		dailyReportMonthDropdown.setBounds( 170, rowHeight, 50, 18 );
+		dailyReportMonthDropdown.setBounds( 170, rowHeight, 70, 20 );
 		dailyReportMonthDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
@@ -359,7 +359,7 @@ public class ManagerPanel extends JPanel
 		dailyReportDay = 1;
 
 		dailyReportPanel.add(dailyReportDayDropdown);
-		dailyReportDayDropdown.setBounds( 230, rowHeight, 50, 18 );
+		dailyReportDayDropdown.setBounds( 230, rowHeight, 70, 20 );
 		dailyReportDayDropdown.setMaximumRowCount(12);
 
 		// ==========================================================================
