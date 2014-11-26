@@ -16,7 +16,7 @@ public class Customer
 	}
 	
 	public boolean isPassCorrect (int cid, String password) {
-		String query = "SELECT * FROM cpsc304.Customer where cid=" + cid +" AND password=" +password;
+		String query = "SELECT * FROM cpsc304.Customer where cid=" + cid +" AND password=\"" +password + "\"";
 		
 		boolean isCorrect = false;
 		
