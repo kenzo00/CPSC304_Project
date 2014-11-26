@@ -55,7 +55,12 @@ public class RefundTest
 		// need to test if returns are added to return table
 		Return r = new Return(); 
 		//r.refund(66, 1);
-		r.refund(66, 1);
+		//r.refund(66, 1); // truetruetrue
+		//r.refund(821, 16); //truetruefalse
+		//r.refund(821, 2); //truetruetrue 
+		r.refund(1, 2); //falsetruetrue
+		r.refund(6, 3); //falsetruetrue
+		r.refund(6, 30); //falsetruefalse
 		
 	}
 
