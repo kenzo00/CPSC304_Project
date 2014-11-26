@@ -32,10 +32,10 @@ public class Return
 	public void refund(int receiptId, int upc) {
 		generateReturnId();
 		boolean a = isValid(receiptId);
-		boolean b = newRefund(receiptId);
+		boolean b = newRefund(receiptId, upc);
 		boolean c = isCorrectUpc(receiptId, upc);
 		System.out.println(" booleans: \n" + a + b + c );
-		if (isValid(receiptId) == true && newRefund(receiptId) == true && isCorrectUpc(receiptId, upc) == true) {
+		if (isValid(receiptId) == true && newRefund(receiptId, upc) == true && isCorrectUpc(receiptId, upc) == true) {
 			
 			
 			// and increment stock with query;  TODO Should be in Item table instead
@@ -131,15 +131,15 @@ public class Return
 
 		}
 		// display a message that the item cannot be refunded
-		if (isValid(receiptId) == false) {
+		//if (isValid(receiptId) == false) {
 			// display that the receipt is either past 15 days or does not match, and cancel refund
 
-		}
+		//}
 		// display a message that the item has already been refunded
-		if (newRefund(receiptId) == false) {
+		//if (newRefund(receiptId) == false) {
 			// display that the item has already been returned and cancel refund
 
-		}
+		//}
 
 
 	}
@@ -244,9 +244,10 @@ public class Return
 
 	// Returns true if this refund is new and not in the return table
 	// Returns false if the refund is already in the return table
-	public boolean newRefund( int receiptId ) {
-		String query = "SELECT * FROM CPSC304.Return WHERE receiptId=" + receiptId;
-
+	public boolean newRefund( int receiptId, int upc ) {
+		//String query = "SELECT * FROM CPSC304.ReturnItem WHERE (SELECT * FROM CPSC304.`Return` WHERE = receiptId=" + receiptId + " AND " + "upc=" + upc+ ")";
+		String query = "SELECT * FROM CPSC304.`Return` r, CPSC304.ReturnItem ri WHERE r.receiptId =" + receiptId + " AND ri.retid = r.retid" + " AND " + "upc=" + upc;
+		
 		List<Integer> returnIds = new ArrayList<Integer>();
 
 		try 
@@ -276,6 +277,7 @@ public class Return
 		catch (SQLException e)
 		{
 			System.out.println( "Failed to execute select statement:\n" + query );
+			System.out.println( e.getMessage() );
 		} 
 		return isNewRefund;
 	}
