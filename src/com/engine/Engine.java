@@ -36,7 +36,7 @@ public class Engine
 		// URL is in format "jdbc:mysql://<ip>:<port>/<databasename>"
 		String connectURL = "jdbc:mysql://localhost:3306/cpsc304"; 
 		String username = "root";
-		String password = "";
+		String password = "root";
 		System.out.println("Please Enter your username");
 		//String username = scanner.nextLine();
 		System.out.println("Please Enter your passowrd");
