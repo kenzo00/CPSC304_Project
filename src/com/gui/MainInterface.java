@@ -70,6 +70,7 @@ public class MainInterface extends JFrame
 //	    customerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //	    customerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	    customerScrollPane.setViewportView( customerPanel );
+	    customerScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
 		tabs.addTab( "Customer", customerScrollPane );
 
 		clerkPanel = new ClerkPanel();
@@ -77,6 +78,7 @@ public class MainInterface extends JFrame
 //		clerkScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //		clerkScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		clerkScrollPane.setViewportView( clerkPanel );
+//	    clerkScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
 		tabs.addTab( "Clerk", clerkScrollPane );
 		
 		managerPanel = new ManagerPanel();
@@ -84,6 +86,7 @@ public class MainInterface extends JFrame
 //		managerScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //		managerScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		managerScrollPane.setViewportView( managerPanel );
+//	    managerScrollPane.getVerticalScrollBar().setUnitIncrement( 16 );
 		tabs.addTab( "Manager", managerScrollPane );
 		
 	}

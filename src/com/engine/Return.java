@@ -171,11 +171,11 @@ public class Return
 					success = true;
 					//return success;
 				}
+				else 
+					success = false;
 
 			}
-			else 
-				success = false;
-
+			
 		}
 		catch (SQLException e)
 		{
@@ -194,7 +194,7 @@ public class Return
 
 		//purchaseDate.plusDays( 15 );
 
-		if ( thisDate.isBefore( purchaseDate.plusDays( 15 ) ) )
+		if ( thisDate.isBefore( purchaseDate.plusDays( 15 ) ))// && thisDate.isAfter(purchaseDate)) 
 		{
 			is15DaysAfter = true;
 		}
@@ -204,9 +204,15 @@ public class Return
 
 	// Check if upc is the matching upc
 	public boolean isCorrectUpc( int receiptId, int upc) {
+		/*Item i = new Item();
+		if (!i.itemExist(upc)) {
+			return false;
+		}*/
 
 		String query = "SELECT upc FROM CPSC304.PurchaseItem WHERE receiptId=" + receiptId;
 
+		isGoodUPC = false;
+		
 		try 
 		{
 			// prepare and execute the SELECT
@@ -214,20 +220,18 @@ public class Return
 			ResultSet result = ps.executeQuery();
 
 
-			boolean hasNext;
-			hasNext = result.next();
 			// checks if there are any matching receiptID's
-			if (hasNext == true) {
+			while ( result.next() ) {
 				int upcDB = result.getInt(1);
 
-				boolean isCorrect = (upcDB == upc);
-				if (isCorrect == true) {
+				if ( upcDB == upc ) {
 					isGoodUPC = true;
-					//return isGoodUPC;
+					break;
 				}	
 			}
-			else 
-				isGoodUPC = false;
+			
+			ps.close();
+			
 		}
 		catch (SQLException e)
 		{

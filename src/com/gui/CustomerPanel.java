@@ -1,12 +1,14 @@
 package com.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.engine.Customer;
+import com.engine.Item;
 import com.engine.Order;
 import com.engine.TableInfo;
 
@@ -43,6 +46,12 @@ public class CustomerPanel extends JPanel
 	private JTextField singerField;
 	private JTextField upcField;
 	private JTextField qtyField;
+
+	//Fields used to display search result
+	private TableInfo searchTableInfo;
+	private JTable searchTable;
+	private JLabel searchTablePanel;
+	private JLabel searchTitle;
 
 	// Panel for dispalying purchase GUI
 	private JPanel purchaseItemPanel;
@@ -270,70 +279,73 @@ public class CustomerPanel extends JPanel
 		final CustomerPanel customerPanel = this;
 
 		// Constants used for spacing
-		int topItem = 206;
-		int labelSpacing = 50;
-		int textFieldSpacing = 75;
+		int topItem = 90;
+		int labelSpacing = 20;
+		int textFieldSpacing = 30;
+		int xSpacing = 100;
 		int buttonSpacing = 40;
 		int headerSpacing = 36;
 
 		// Heading Text
 		JLabel welcome = new JLabel( "Welcome to the AMS shopping system." );
-		welcome.setFont( new Font( "serif", Font.BOLD, 30 ) );
+		welcome.setFont( new Font( "serif", Font.BOLD, 24 ) );
 		welcome.setBounds( 25, 25, 800, 40 );
 
 		JLabel welcome2 = new JLabel( "You are currently logged in as: User Id: " + customerId + ", Name: " + customerName );
-		welcome2.setFont( new Font( "serif", Font.PLAIN, 18 ) );
-		welcome2.setBounds( 45, 65 , 800, 24 );	
+		welcome2.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		welcome2.setBounds( 45, 65 , 400, 20 );	
 
 		// Search Bar
 		JLabel searchLabel = new JLabel ("Seach for your item...");
-		searchLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
-		searchLabel.setBounds( 150, topItem, 300, 40);
+		searchLabel.setFont( new Font( "serif", Font.BOLD, 16 ) );
+		searchLabel.setBounds( 50, topItem, 300, 25);
 
 		//Category
 		JLabel categoryLabel = new JLabel("Category");
-		categoryLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		categoryLabel.setBounds(160, topItem + textFieldSpacing, 200, 40);
+		categoryLabel.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		categoryLabel.setBounds(70, topItem + textFieldSpacing, 75, 20);
 
 		categoryField = new JTextField();
-		categoryField.setBounds(160, topItem + textFieldSpacing + labelSpacing, 150, 18);
+		categoryField.setBounds(70, topItem + textFieldSpacing + labelSpacing, 75, 18);
 
 		//Title
 		JLabel titleLabel = new JLabel("Title");
-		titleLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		titleLabel.setBounds(160, topItem + textFieldSpacing*2, 200, 40);
+		titleLabel.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		titleLabel.setBounds(70 + xSpacing, topItem + textFieldSpacing, 75, 20);
 
 		titleField = new JTextField();
-		titleField.setBounds(160, topItem + textFieldSpacing*2 + labelSpacing, 150, 18);
+		titleField.setBounds(70 + xSpacing, topItem + textFieldSpacing + labelSpacing, 75, 18);
 
 		//LeadSinger
 		JLabel singerLabel = new JLabel("Leading Singer");
-		singerLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		singerLabel.setBounds(160, topItem + textFieldSpacing*3, 200, 40);
+		singerLabel.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		singerLabel.setBounds(70 + xSpacing*2, topItem + textFieldSpacing, 120, 20);
 
 		singerField = new JTextField();
-		singerField.setBounds(160, topItem + textFieldSpacing*3 + labelSpacing, 150, 18);
+		singerField.setBounds(70 + xSpacing*2, topItem + textFieldSpacing + labelSpacing, 75, 18);
 
-		//OR
+		//Make Purchase
 		JLabel purchaseLabel = new JLabel("Make Purchase");
-		purchaseLabel.setFont( new Font( "serif", Font.BOLD, 32 ) );
-		purchaseLabel.setBounds(150, topItem + textFieldSpacing*4+30, 400, 40);
+		purchaseLabel.setFont( new Font( "serif", Font.BOLD, 16 ) );
+		purchaseLabel.setBounds(50, topItem + textFieldSpacing*3, 150, 20);
 
 		//UPC
 		JLabel upcLabel = new JLabel("UPC");
-		upcLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		upcLabel.setBounds(160, topItem + 50 + textFieldSpacing*4+30, 200, 40);
+		upcLabel.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		upcLabel.setBounds(70, topItem + textFieldSpacing*4, 75, 20);
 
 		upcField = new JTextField();
-		upcField.setBounds(160, topItem + 50 + textFieldSpacing*4+30 + labelSpacing, 150, 18);
+		upcField.setBounds(70, topItem + textFieldSpacing*4 + labelSpacing, 75, 18);
 
 		//Quantity
 		JLabel qtyLabel = new JLabel("Quantity");
-		qtyLabel.setFont( new Font( "serif", Font.BOLD, 24 ) );
-		qtyLabel.setBounds(160, topItem + 50 + textFieldSpacing*5+30, 200, 40);
+		qtyLabel.setFont( new Font( "serif", Font.PLAIN, 14 ) );
+		qtyLabel.setBounds(70 + xSpacing, topItem + textFieldSpacing*4, 75, 20);
 
 		qtyField = new JTextField();
-		qtyField.setBounds(160, topItem + 50 + textFieldSpacing*5+30 + labelSpacing, 150, 18);
+		qtyField.setBounds(70 + xSpacing, topItem + textFieldSpacing*4 + labelSpacing, 75, 18);
+		
+		
 
 
 
@@ -355,18 +367,37 @@ public class CustomerPanel extends JPanel
 							JOptionPane.ERROR_MESSAGE);
 
 				}
+				else {
+					customerPanel.searchTableInfo = order.searchItem(category, title, singer);
+					displaySearchTable();
+				}
+
 			}
 		});
+		
+		searchButton.setText( "Search" );
+		searchButton.setBounds( 350, topItem, 80, 30 );
+		
+		searchTitle = new JLabel();
+		purchaseItemPanel.add(searchTitle);
+		
+		searchTablePanel = new JLabel();
+		purchaseItemPanel.add(searchTablePanel);
+		searchTablePanel.setLayout( new BorderLayout());
+		
 
 
 
-		//Purchase Button
-		JButton purchaseButton = new JButton();
-		purchaseButton.addActionListener( new ActionListener() {
+
+
+		//Add to shopping cart Button
+		JButton addCartButton = new JButton();
+		addCartButton.addActionListener( new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) 
 			{
 				Order order = new Order();
+				Item item = new Item();
 
 				String upcText = customerPanel.upcField.getText();
 				int upc = (upcText.equals("") || upcText.matches("^\\s*$")) ? 0 :Integer.parseInt(upcText);
@@ -376,6 +407,12 @@ public class CustomerPanel extends JPanel
 				if (upcText.isEmpty()&&qtyText.isEmpty()) {
 					JOptionPane.showMessageDialog(customerPanel, 
 							"Please fill the UPC and Quantity you want to purchase",
+							"Search error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				if (!item.itemExist(upc)) {
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Sorry, but we do not have this item",
 							"Search error",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -404,48 +441,36 @@ public class CustomerPanel extends JPanel
 					}
 
 				} //else // TODO, figure out how to display the list on GUI
-					
+
 
 			}
 
 		});
-		purchaseButton.setText( "Purhcase" );
-		purchaseButton.setBounds( 360, topItem+textFieldSpacing*6, 85, 30 );
+		addCartButton.setText( "Add to Cart" );
+		addCartButton.setBounds( 325, topItem + textFieldSpacing*3, 125, 30 );
 
 
-
-		// TODO: Add inputs for searching for items
-		/* Example of text input
-		JLabel userId2 = new JLabel( "User ID (Must be a number):" );
-		userId2.setFont( new Font( "serif", Font.BOLD, 14 ) );
-		userId2.setBounds( 750, topItem, 300, 19);
-
-		 * Example of Label
-		newUserId = new JTextField();
-		newUserId.setBounds( 750, topItem + labelSpacing, 150, 16 );
-
-		 * Example of reading a text input
-		String text = userId2.getText();
-		 */
-		// TODO: Add display for items that match the users search criteria 
-		// TODO: Add display for shopping cart
-		/* Probably display it in a table?
-
-		 * Example of table
-
-		   	String[] names = {"Bryan","Lee"};
-			Object[][] data = {{"something",new Integer(3)},{"probelm?",new Integer(4)},{"lololol?",new Integer(6)}};
-			topSalesTable = new JTable(data,names);
-			topSalesTablePanel = new JLabel();
-			topSalesTablePanel.setLayout( new BorderLayout() );
-			this.add(topSalesTablePanel);
-			topSalesTablePanel.setBounds( 0, 0, 500, 16*data.length + 18 );
-			topSalesTablePanel.add( topSalesTable.getTableHeader(), BorderLayout.NORTH );
-			topSalesTablePanel.add( topSalesTable, BorderLayout.CENTER );
-
-
-		 */
 		// TODO: maybe add remove from shopping cart? 
+		
+		
+		JButton cartButton = new JButton();
+		cartButton.addActionListener( new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Order order = new Order();
+				Map<Integer, Integer> shopCart = order.getCart();
+				JOptionPane.showMessageDialog(customerPanel, 
+						"hi" + "\n" +"hi" + "\n" +"hi" + "\n" +"hi" + "\n" +"hi" + "\n" ,
+						"My Shopping Cart",
+						JOptionPane.PLAIN_MESSAGE);
+				
+			}
+			
+		});
+		
+		cartButton.setText("My Cart");
+		cartButton.setBounds(950, 15, 100, 16);
 
 		// Logout button
 		JButton logoutButton = new JButton();
@@ -487,11 +512,40 @@ public class CustomerPanel extends JPanel
 		purchaseItemPanel.add(qtyField);
 
 		// Add Purchase button
-		purchaseItemPanel.add(purchaseButton);
+		purchaseItemPanel.add(addCartButton);
+		// Add Search button
+		purchaseItemPanel.add(searchButton);
 		// Add logout button
 		purchaseItemPanel.add( logoutButton );
+		// Add Display Cart button
+		purchaseItemPanel.add(cartButton);
+		
 
 		// Set size for login page
 		purchaseItemPanel.setBounds( 0, 0, MainInterface.WIDTH, MainInterface.HEIGHT );
+	}
+	
+	private void displaySearchTable() {
+		searchTable = new JTable(searchTableInfo.getData(), searchTableInfo.getHeaders());
+		searchTablePanel.removeAll();
+		searchTablePanel.add(searchTable.getTableHeader(), BorderLayout.NORTH);
+		searchTablePanel.add(searchTable, BorderLayout.CENTER);
+		System.out.println( searchTableInfo.getData().length);
+		searchTablePanel.setBounds( 5, 280, 1000, 16*searchTableInfo.getData().length + 18 );
+		// TODO: Change size of the panel so scrolling will happen
+		this.setPreferredSize( new Dimension ( 1000, 5000) );
+		purchaseItemPanel.setPreferredSize( new Dimension( 1000, 5000));
+		// TODO: need to change the preferred size back to normal when logging out
+		searchTablePanel.revalidate();
+		searchTablePanel.repaint();
+
+		/*if ( searchTitle != null )
+	{
+		dailyReportPanel.remove( reportTitle );
+	}
+	reportTitle = new JLabel( "Report:" );
+	reportTitle.setFont( new Font( "serif", Font.BOLD, 14 ) );
+	dailyReportPanel.add( reportTitle );
+	reportTitle.setBounds( 100, 120 + 16*dailyReportTotalsInfo.getData().length + 18, 200, 20 );*/
 	}
 }
