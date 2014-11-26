@@ -73,22 +73,36 @@ public class Order {
 	// Search & add item to the shopping cart
 	public TableInfo searchItem(String category, String title, String leadSinger){
 		// Call method in Item, should return a TableInfo containing all the searched Item.
-				if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
-					return i.getItems("c", category, title, leadSinger);
-				}
+		if (!category.isEmpty()&&(title.isEmpty()||leadSinger.isEmpty())){
+			if (!title.isEmpty())
+				return i.getItems("ct", category, title, leadSinger);
+			if (!leadSinger.isEmpty())
+				return i.getItems("cs", category, title, leadSinger);
+			else
+				return i.getItems("c", category, title, leadSinger);
+		}
 
-				else if (!title.isEmpty()&&(category.isEmpty()||leadSinger.isEmpty())){
-					return i.getItems("t", category, title, leadSinger);
-				}
+		else if (!title.isEmpty()&&(category.isEmpty()||leadSinger.isEmpty())){
+			if (!category.isEmpty())
+				return i.getItems("ct", category, title, leadSinger);
+			if (!leadSinger.isEmpty())
+				return i.getItems("ts", category, title, leadSinger);
+			else
+				return i.getItems("t", category, title, leadSinger);
+		}
 
-				else if (!leadSinger.isEmpty()&&(title.isEmpty()||category.isEmpty())){
-					return i.getItems("s", category, title, leadSinger);
-				}
+		else if (!leadSinger.isEmpty()&&(title.isEmpty()||category.isEmpty())){
+			if (!category.isEmpty())
+				return i.getItems("cs", category, title, leadSinger);
+			if (!title.isEmpty())
+				return i.getItems("ts", category, title, leadSinger);
+			else
+				return i.getItems("s", category, title, leadSinger);
+		}
+		else{
+			return i.getItems("all", category, title, leadSinger);
 
-				else{
-					return i.getItems("all", category, title, leadSinger);
-
-				}
+		}
 	}
 
 	// Check if the item is out of stock
@@ -223,13 +237,13 @@ public class Order {
 		}
 	}*/
 
-	
+
 	// get the Cart
 	public Map<Integer, Integer> getCart() {
 		return this.shopCart;
 	}
-	
-	
+
+
 	// generate a receiptId
 	// take the latest receiptId and increment by 1
 	private void generateId() {
@@ -272,7 +286,7 @@ public class Order {
 
 		this.date = Date.valueOf(currentDate);
 		this.expectedDate = Date.valueOf(calculatedDate);
-		
+
 		return numDays;
 	}
 
@@ -311,13 +325,13 @@ public class Order {
 	public boolean deliverOrder( int receiptId, Date date )
 	{
 		boolean isDelivered = false;
-		
+
 		isDelivered = isOrderDelivered( receiptId );
-		
+
 		if ( !isDelivered )
 		{
 			String query = "UPDATE cpsc304.`Order` SET deliveredDate = " + date;
-			
+
 			try 
 			{
 				// Prepare and execute the insert statement
@@ -348,10 +362,10 @@ public class Order {
 				}
 			}
 		}
-		
+
 		return isDelivered;
 	}
-	
+
 	public boolean isOrderDelivered( int receiptId )
 	{
 		boolean isDelivered = false;

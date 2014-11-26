@@ -435,6 +435,13 @@ public class CustomerPanel extends JPanel
 				int upc = (upcText.equals("") || upcText.matches("^\\s*$")) ? 0 :Integer.parseInt(upcText);
 				String qtyText = customerPanel.qtyField.getText();
 				int qty = (qtyText.equals("") || qtyText.matches("^\\s*$")) ? 0 :Integer.parseInt(qtyText);
+				if (qty <= 0){
+					JOptionPane.showMessageDialog(customerPanel, 
+							"Quantity cannot be less than or equal to 0",
+							"Input error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				if (upcText.isEmpty()&&qtyText.isEmpty()) {
 					JOptionPane.showMessageDialog(customerPanel, 

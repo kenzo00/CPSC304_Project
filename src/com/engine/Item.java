@@ -115,6 +115,19 @@ public class Item {
 		else if (offset == "s"){
 			query = "SELECT * FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
 		}
+		else if (offset == "ct"){
+			query = "SELECT * FROM cpsc304.`Item` WHERE category = '" + c +"' AND title ='" + t +"'";
+		}
+		else if (offset == "cs"){
+			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.category = '" + c +"' AND "
+					+ "A.name = '" + s + "'";
+		}
+		else if (offset == "ts") {
+			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.title = '" + t + "' AND "
+					+ "A.name = '" + s + "'";
+		}
 		else 
 			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
 					+ "WHERE B.category = '" + c +"' AND "
