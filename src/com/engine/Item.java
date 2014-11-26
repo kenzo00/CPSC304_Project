@@ -107,32 +107,37 @@ public class Item {
 		String query;
 		int upc = 0;
 		if (offset == "c"){
-			query = "SELECT * FROM cpsc304.`Item` WHERE category = '" + c +"'";
+			query = "SELECT * FROM cpsc304.`Item` WHERE category LIKE '" + c +"%'";
 		}
 		else if (offset == "t"){
-			query = "SELECT * FROM cpsc304.`Item` WHERE title = '" + t +"'";
+			query = "SELECT * FROM cpsc304.`Item` WHERE title LIKE '" + t +"%'";
 		}
 		else if (offset == "s"){
-			query = "SELECT * FROM cpsc304.`LeadSinger` WHERE name = '" + s +"'";
+			query = "SELECT A.upc, A.name, B.title, B.type, B.category, B.company, B.year, B.price, B.stock"
+					+ " FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE A.name LIKE '" + s + "%'";
 		}
 		else if (offset == "ct"){
-			query = "SELECT * FROM cpsc304.`Item` WHERE category = '" + c +"' AND title ='" + t +"'";
+			query = "SELECT * FROM cpsc304.`Item` WHERE category LIKE '" + c +"%' AND title LIKE '" + t +"%'";
 		}
 		else if (offset == "cs"){
-			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
-					+ "WHERE B.category = '" + c +"' AND "
-					+ "A.name = '" + s + "'";
+			query = "SELECT A.upc, A.name, B.title, B.type, B.category, B.company, B.year, B.price, B.stock"
+					+ " FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.category LIKE '" + c +"%' AND "
+					+ "A.name LIKE '" + s + "%'";
 		}
 		else if (offset == "ts") {
-			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
-					+ "WHERE B.title = '" + t + "' AND "
-					+ "A.name = '" + s + "'";
+			query = "SELECT A.upc, A.name, B.title, B.type, B.category, B.company, B.year, B.price, B.stock"
+					+ " FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.title LIKE '" + t + "%' AND "
+					+ "A.name LIKE '" + s + "%'";
 		}
 		else 
-			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
-					+ "WHERE B.category = '" + c +"' AND "
-					+ "B.title = '" + t + "' AND "
-					+ "A.name = '" + s + "'";
+			query = "SELECT A.upc, A.name, B.title, B.type, B.category, B.company, B.year, B.price, B.stock"
+					+ " FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
+					+ "WHERE B.category LIKE '" + c +"%' AND "
+					+ "B.title LIKE '" + t + "%' AND "
+					+ "A.name LIKE '" + s + "%'";
 
 		TableInfo tableInfo = new TableInfo();
 
