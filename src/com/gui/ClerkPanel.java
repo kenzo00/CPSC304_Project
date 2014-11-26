@@ -105,7 +105,6 @@ public class ClerkPanel extends JPanel {
 		JButton searchButton = new JButton();
 		searchButton.addActionListener( new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				Return transaction = new Return();
