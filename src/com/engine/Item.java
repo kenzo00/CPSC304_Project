@@ -117,8 +117,8 @@ public class Item {
 		}
 		else 
 			query = "SELECT * FROM cpsc304.LeadSinger as A INNER JOIN cpsc304.Item as B ON A.upc = B.upc "
-					+ "WHERE B.category = '" + c +"' AND"
-					+ "B.title = '" + t + "' AND"
+					+ "WHERE B.category = '" + c +"' AND "
+					+ "B.title = '" + t + "' AND "
 					+ "A.name = '" + s + "'";
 
 		TableInfo tableInfo = new TableInfo();
