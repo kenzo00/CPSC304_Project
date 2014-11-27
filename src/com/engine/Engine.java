@@ -11,6 +11,7 @@ public class Engine
 	private static Engine instance;
 	private static Queries queries;
 	private static Connection connection;
+	private static boolean isInitialized;
 
 	private Engine ()
 	{
@@ -19,46 +20,49 @@ public class Engine
 
 	public static Engine getInstance()
 	{
+		return instance;
+	}
+	
+	public static void createFirstInstance( String connectURL, String user, String password ) throws Exception
+	{
 		if ( instance == null )
 		{
 			instance = new Engine();
-			initialize();
 		}
-		return instance;
+		if ( isInitialized )
+		{
+			throw new Exception( "Engine has already been created and initialized!" );
+		}
+		else
+		{
+			initialize( connectURL, user, password );
+		}
 	}
 
-	private static void initialize()
+	private static void initialize( String connectURL, String user, String password ) throws SQLException
 	{
 		System.out.println("YAY FIRST CLASS :D");
 
-		Scanner scanner = new Scanner(System.in);
+//		Scanner scanner = new Scanner(System.in);
 
 		// URL is in format "jdbc:mysql://<ip>:<port>/<databasename>"
-		String connectURL = "jdbc:mysql://localhost:3306/cpsc304"; 
-		String username = "root";
-		String password = "";
-		System.out.println("Please Enter your username");
+//		String connectURL = "jdbc:mysql://localhost:3306/cpsc304"; 
+//		String username = "root";
+//		String password = "root";
+//		System.out.println("Please Enter your username");
 		//String username = scanner.nextLine();
-		System.out.println("Please Enter your passowrd");
+//		System.out.println("Please Enter your passowrd");
 		//String password = scanner.nextLine();
 
-		try 
-		{
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-			connection = DriverManager.getConnection(connectURL,username,password);
-			System.out.println("Connected! :D");
+		DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+		connection = DriverManager.getConnection( connectURL, user, password );
+		System.out.println("Connected! :D");
 
-			// Set Autocommit false
-			connection.setAutoCommit( false );
-			
-			queries = new DBQueries( connection );
+		// Set Autocommit false
+		connection.setAutoCommit( false );
+		
+		queries = new DBQueries( connection );
 
-		} 
-		catch (SQLException e) 
-		{
-			System.out.println("Message: " + e.getMessage());
-			System.exit(-1);
-		}
 	}
 	
 	public Queries getQueries()
