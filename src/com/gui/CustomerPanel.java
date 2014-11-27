@@ -1,7 +1,9 @@
 package com.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -273,6 +276,15 @@ public class CustomerPanel extends JPanel
 		registerButton.setText( "Register" );
 		registerButton.setBounds( 775, topItem + 4*textFieldSpacing + labelSpacing + buttonSpacing, 85, 16 );
 
+		userId.setNextFocusableComponent( password );
+		password.setNextFocusableComponent( loginButton );
+		loginButton.setNextFocusableComponent( newUserId );
+		newUserId.setNextFocusableComponent( newPassword );
+		newPassword.setNextFocusableComponent( name );
+		name.setNextFocusableComponent( address );
+		address.setNextFocusableComponent( phone );
+		phone.setNextFocusableComponent( registerButton );
+		
 		// Add login page to CustomerPanel
 		this.add( loginPanel );
 		// Add header text
