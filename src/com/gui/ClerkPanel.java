@@ -197,7 +197,7 @@ public class ClerkPanel extends JPanel {
 
 							//insert method to update table TODO
 
-							clerkPanel.clerkTableInfo = i.getRefundItem( uNumber, itemNum);
+							clerkPanel.clerkTableInfo = i.getRefundItem( rec, uNumber, itemNum);
 							if ( tableHeaders == null )
 							{
 								tableHeaders = clerkTableInfo.getHeaders();

@@ -367,10 +367,10 @@ public class Item {
 		return price;
 	}
 
-	public TableInfo getRefundItem( int upc, int quantity) {
+	public TableInfo getRefundItem( int receiptId, int upc, int quantity) {
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append( " select i.upc AS `UPC`, i.title AS `Item Name`, i.stock AS `Current Stock`, " );
+		stringBuilder.append( " select '" ).append( receiptId ).append( "' AS `Receipt Id`, i.upc AS `UPC`, i.title AS `Item Name`, i.stock AS `Current Stock`, " );
 		stringBuilder.append( quantity ).append( " AS `Quantity Refunded` from item i where upc=" ).append( upc );
 						
 		String query = stringBuilder.toString();
