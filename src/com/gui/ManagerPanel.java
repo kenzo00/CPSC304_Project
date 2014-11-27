@@ -189,6 +189,46 @@ public class ManagerPanel extends JPanel
 				String year = String.valueOf( topSalesYear );
 				String month = String.valueOf( topSalesMonth );
 				String date = String.valueOf( topSalesDay );
+				
+				int yearInt = topSalesYear;
+				int monthInt = topSalesMonth;
+				int dateInt = topSalesDay;
+				
+				boolean isDateValid = true;
+
+				// Check if the date entered is valid
+				if (yearInt % 4 == 0){
+					if (monthInt == 2) {
+						if (dateInt > 29) {
+							isDateValid = false;
+						}
+					}
+					else if (monthInt % 2 == 0 && monthInt != 8) {
+						if(dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+				else if (!(yearInt % 4 ==0)) {
+					if (monthInt == 2) {
+						if (dateInt > 28) {
+							isDateValid = false;
+						}
+					}
+					if (monthInt % 2 == 0 && monthInt != 8) {
+						if (dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+
+				if (!isDateValid) {
+					JOptionPane.showMessageDialog(managerPanel, 
+							"The specified date is invalid.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				String dateString = year + "-" + month + "-" + date;
 				System.out.println(dateString);
 				Date sqlDate = Date.valueOf( dateString );
@@ -306,6 +346,46 @@ public class ManagerPanel extends JPanel
 				String year = String.valueOf( dailyReportYear );
 				String month = String.valueOf( dailyReportMonth );
 				String date = String.valueOf( dailyReportDay );
+				
+				int yearInt = dailyReportYear;
+				int monthInt = dailyReportMonth;
+				int dateInt = dailyReportDay;
+				
+				boolean isDateValid = true;
+
+				// Check if the date entered is valid
+				if (yearInt % 4 == 0){
+					if (monthInt == 2) {
+						if (dateInt > 29) {
+							isDateValid = false;
+						}
+					}
+					else if (monthInt % 2 == 0 && monthInt != 8) {
+						if(dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+				else if (!(yearInt % 4 ==0)) {
+					if (monthInt == 2) {
+						if (dateInt > 28) {
+							isDateValid = false;
+						}
+					}
+					if (monthInt % 2 == 0 && monthInt != 8) {
+						if (dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+
+				if (!isDateValid) {
+					JOptionPane.showMessageDialog(managerPanel, 
+							"The specified date is invalid", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				String dateString = year + "-" + month + "-" + date;
 				System.out.println(dateString);
 				Date sqlDate = Date.valueOf( dateString );
@@ -451,6 +531,46 @@ public class ManagerPanel extends JPanel
 				String year = String.valueOf( deliveryYear );
 				String month = String.valueOf( deliveryMonth );
 				String date = String.valueOf( deliveryDay );
+				
+				boolean isDateValid = true;
+				
+				int yearInt = deliveryYear;
+				int monthInt = deliveryMonth;
+				int dateInt = deliveryDay;
+
+				// Check if the date entered is valid
+				if (yearInt % 4 == 0){
+					if (monthInt == 2) {
+						if (dateInt > 29) {
+							isDateValid = false;
+						}
+					}
+					else if (monthInt % 2 == 0 && monthInt != 8) {
+						if(dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+				else if (!(yearInt % 4 ==0)) {
+					if (monthInt == 2) {
+						if (dateInt > 28) {
+							isDateValid = false;
+						}
+					}
+					if (monthInt % 2 == 0 && monthInt != 8) {
+						if (dateInt > 30) {
+							isDateValid = false;
+						}
+					}
+				}
+
+				if (!isDateValid) {
+					JOptionPane.showMessageDialog(managerPanel, 
+							"Delivery Date is invalid", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				String dateString = year + "-" + month + "-" + date;
 				System.out.println(dateString);
 				Date sqlDate = Date.valueOf( dateString );
