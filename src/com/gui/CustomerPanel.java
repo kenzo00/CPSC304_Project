@@ -151,37 +151,48 @@ public class CustomerPanel extends JPanel
 			{
 				Order order = new Order();
 				String userId = customerPanel.userId.getText();
-				int cid = (userId.equals("") || userId.matches("^\\s*$")) ? 0 :Integer.parseInt(userId);
-				String password = new String( customerPanel.password.getPassword() );
-				if ( userId.equals("") || password.equals("") )
+				try
 				{
-					// Empty fields. Show error popup
+					int cid = Integer.parseInt(userId);
+					String password = new String( customerPanel.password.getPassword() );
+					if ( userId.equals("") || password.equals("") )
+					{
+						// Empty fields. Show error popup
+						JOptionPane.showMessageDialog( customerPanel,
+								"Please fill in all required fields",
+								"Login error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					// TODO: Check if password is correct in the if statement condition
+					else if ( order.login(cid, password) )
+					{
+						// Update the cid to keep track
+						cidUser = cid;
+						// Password is correct. Continue to shopping page.
+						customerPanel.customerId = userId;
+						Customer customer = new Customer();
+						customerPanel.customerName = customer.getName( Integer.parseInt( userId ) );
+						loginPanel.setVisible( false );
+						initializePurchaseItemPanel();
+						purchaseItemPanel.setVisible( true );
+					}
+					else
+					{
+						// Password is incorrect. Show error popup
+						JOptionPane.showMessageDialog( customerPanel,
+								"Incorrect user credentials or user is not registered",
+								"Login error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch ( NumberFormatException nfe )
+				{
 					JOptionPane.showMessageDialog( customerPanel,
-							"Please fill in all required fields",
-							"Login error",
+							"Please make sure User Id is a number",
+							"Invalid Input Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-				// TODO: Check if password is correct in the if statement condition
-				else if ( order.login(cid, password) )
-				{
-					// Update the cid to keep track
-					cidUser = cid;
-					// Password is correct. Continue to shopping page.
-					customerPanel.customerId = userId;
-					Customer customer = new Customer();
-					customerPanel.customerName = customer.getName( Integer.parseInt( userId ) );
-					loginPanel.setVisible( false );
-					initializePurchaseItemPanel();
-					purchaseItemPanel.setVisible( true );
-				}
-				else
-				{
-					// Password is incorrect. Show error popup
-					JOptionPane.showMessageDialog( customerPanel,
-							"Incorrect user credentials or user is not registered",
-							"Login error",
-							JOptionPane.ERROR_MESSAGE);
-				}
+				
 			}
 
 		});
@@ -237,38 +248,49 @@ public class CustomerPanel extends JPanel
 			{
 				Order order = new Order();
 				String userId = customerPanel.newUserId.getText();
-				int cid = (userId.equals("") || userId.matches("^\\s*$")) ? 0 :Integer.parseInt(userId);
-				String password = new String( customerPanel.newPassword.getPassword() );
-				String name = customerPanel.name.getText();
-				String address = customerPanel.address.getText();
-				String phone = customerPanel.phone.getText();
-				if ( userId.equals("") || password.equals("") || name.equals("") || address.equals("") || phone.equals("") )
+				try
 				{
-					// Empty fields. Show error popup
+					int cid = Integer.parseInt( userId );
+					String password = new String( customerPanel.newPassword.getPassword() );
+					String name = customerPanel.name.getText();
+					String address = customerPanel.address.getText();
+					String phone = customerPanel.phone.getText();
+					if ( userId.equals("") || password.equals("") || name.equals("") || address.equals("") || phone.equals("") )
+					{
+						// Empty fields. Show error popup
+						JOptionPane.showMessageDialog( customerPanel,
+								"Please fill in all required fields",
+								"Register error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					// TODO: Check if registration is successful in the if statement condition
+					else if ( order.registerCustomer(cid, password, name, address, phone) )
+					{
+						// Registration is successful. Login the user and continue to shopping page.
+						cidUser = cid;
+						customerName = name;
+						customerId = userId;
+						loginPanel.setVisible( false );
+						initializePurchaseItemPanel();
+						purchaseItemPanel.setVisible( true );
+					}
+					else
+					{
+						// cid is taken. Show error popup
+						JOptionPane.showMessageDialog( customerPanel,
+								"Registration failed. Try a different userId",
+								"Registration error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch ( NumberFormatException nfe )
+				{
 					JOptionPane.showMessageDialog( customerPanel,
-							"Please fill in all required fields",
-							"Register error",
+							"Please make sure User Id is a number",
+							"Invalid input error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-				// TODO: Check if registration is successful in the if statement condition
-				else if ( order.registerCustomer(cid, password, name, address, phone) )
-				{
-					// Registration is successful. Login the user and continue to shopping page.
-					cidUser = cid;
-					customerName = name;
-					customerId = userId;
-					loginPanel.setVisible( false );
-					initializePurchaseItemPanel();
-					purchaseItemPanel.setVisible( true );
-				}
-				else
-				{
-					// cid is taken. Show error popup
-					JOptionPane.showMessageDialog( customerPanel,
-							"Registration failed. Try a different userId",
-							"Registration error",
-							JOptionPane.ERROR_MESSAGE);
-				}
+				
 			}
 
 		});
